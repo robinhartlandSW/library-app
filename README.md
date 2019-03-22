@@ -1,0 +1,1 @@
+Install everything from requirements.txt, compile and run

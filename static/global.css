@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: beige;
+}
+
+#other-view-link {
+    text-align: right;
+    float: right;
+}
+
+#home-link {
+    text-align: left;
+    float: left;
+}
+
+h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    clear: both;
+}
+
+.search-element-container {
+    float: left;
+    text-align: left;
+    width: 28%;
+    border-style: dotted;
+    border-color: black;
+    margin: 0 2.5% ;
+    box-sizing: border-box;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.container, .big-button{
+    float: left;
+    text-align: center;
+}
+
+.big-button {
+    color: black;
+    font-weight: bold;
+}
+
+.quarter-width {
+    width: 25%;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.book-details-area {
+    width: 45%;
+}
+
+
+
+#or-area {
+    width: 10%;
+}
+
+.block, .centred-block {
+    margin: 30px;
+    background-color: cornflowerblue;
+    border-color: burlywood;
+
+}
+
+.centred-block {
+    height: 270px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-style: outset;
+}
+
+.block, #search-box {
+    padding: 30px;
+}
+
+.user-input-area {
+    text-align: left;
+}
+
+a {
+    color: rgb(88, 57, 21);
+}
+
+
+.librarian-form {
+    text-align: left;
+    padding: 30px;
+}
+
+
+
+form {
+    text-align: left;
+}
+
+#reader-info {
+    margin: 30px;
+}
+
+.see-available-copies-button {
+    float: right;
+}
+
+#search-box{
+    background-color: lightgreen;
+    margin: 30px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#important-message{
+    font-weight: bold;
+}
+
+.input-box {
+    float: right;
+    position: relative;
+    right: 5%;
+    clear: right;
+    max-width: 100%;
+}
+
+.book-details-block {
+    display: flex;
+    justify-content: space-evenly;
+}
