@@ -15,7 +15,7 @@
             Return a book
         </h1>
         <div class="block">
-                <form action="/check_out_book" method="post">
+                <form action="/return_book_to_database" method="post">
                     
                     <h2> Return a book </h2>
                     <div class = "book-details-block">
