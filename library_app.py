@@ -60,7 +60,7 @@ def return_book_to_database(db):
     ISBN = request.forms.get('ISBN')
     serial_number = request.forms.get('serial_number')
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
-
+    return template("book_returned.tpl")
 
 @post('/add_new_edition_to_database')
 def add_new_edition_to_database(db): 
