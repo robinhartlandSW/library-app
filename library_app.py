@@ -1,21 +1,8 @@
-database_file = 'library.db'
-
-# Database Seeding:
-import sqlite3, caribou
-conn = sqlite3.connect(database_file)
-
-
-#db_path = 'library.db'
-#migrations_path = './migrations'
-
-#caribou.upgrade(db_path, migrations_path)
-
 # Setup
-
+database_file = 'library-nomad.db'
 from bottle import get, post, install, run, request, route, template, static_file
 from bottle_sqlite import SQLitePlugin
 install(SQLitePlugin(dbfile=database_file))
-
 
 # Static content:
 @get('/static/<file:path>')
@@ -23,13 +10,10 @@ def serve_static(file):
     return static_file(file, root='./static')
 
 # Routes
-
-
 @get('/')
 @get('/home')
 def librarian_home():
     return template('librarian_homepage.tpl')
-
 
 @get('/add_new_reader')
 def add_new_reader():
@@ -80,8 +64,6 @@ def add_new_edition_to_database(db):
     author = request.forms.get('author')
     ISBN = request.forms.get('ISBN')
     # TODO: check if either title+author, or ISBN, have been entered
-
-
     edition_in_library = db.execute("SELECT * from editions WHERE ISBN == ?", (ISBN,)).fetchone()
 
     if edition_in_library == None:

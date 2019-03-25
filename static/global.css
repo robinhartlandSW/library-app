@@ -60,8 +60,6 @@ h1 {
     width: 45%;
 }
 
-
-
 #or-area {
     width: 10%;
 }
@@ -70,7 +68,6 @@ h1 {
     margin: 30px;
     background-color: cornflowerblue;
     border-color: burlywood;
-
 }
 
 .centred-block {
@@ -94,13 +91,10 @@ a {
     color: rgb(88, 57, 21);
 }
 
-
 .librarian-form {
     text-align: left;
     padding: 30px;
 }
-
-
 
 form {
     text-align: left;
