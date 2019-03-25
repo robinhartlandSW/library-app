@@ -30,7 +30,7 @@
                 {{edition['author']}}    <br />
                 ISBN: {{edition['ISBN']}} <br />
                 <div>
-                    Copies in stock: 6
+                    Copies in stock: {{edition['num_available_copies']}}
                     <button class="see-available-copies-button"> see serial numbers of available copies...</button>
                 </div>
             </div>

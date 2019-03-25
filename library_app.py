@@ -31,6 +31,7 @@ def reader_overview(db):
     names = reader_name.split(' ')
 
     # Assume there's only one person with each name for now, and get the corresponding ID
+    #TODO: make reader selection be based on an ID rather than assuming only 2 names!
     IDs = db.execute("SELECT ID FROM readers WHERE firstName == ? AND lastName == ?", (names[0],names[1])).fetchone()
     if IDs != None:
         ID = IDs["ID"]
@@ -97,7 +98,14 @@ def add_new_copy(db, editionID):
 @get('/view_library')
 def view_library(db):
     library = db.execute('SELECT * FROM editions').fetchall()
-    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN']} for e in library]
+    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
+
+    for ed in editions:
+        ID = ed['ID']
+        num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0]
+        ed['num_available_copies'] = num_available_copies
+
+
     return template('book_display.tpl', editions=editions)
 
 
