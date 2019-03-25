@@ -47,7 +47,9 @@ def check_out_book(db):
     serial_number = request.forms.get('serial_number')
     readerID = request.forms.get('readerID')
     db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
-    # TODO: return a page showing that the book has been successfully checked out
+
+    #TODO: return a suitable error message when trying to check out a disallowed book
+    return template("book_checked_out.tpl")
 
 
 @post('/return_book_to_database')
