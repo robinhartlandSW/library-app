@@ -107,8 +107,15 @@ def view_library(db):
         num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0]
         ed['num_available_copies'] = num_available_copies
 
-
     return template('book_display.tpl', editions=editions)
+
+@get('/available_serial_numbers')
+def available_serial_numbers(db):
+    editionID = request.query.get("editionID")
+    edition = db.execute('SELECT * FROM editions WHERE ID == ?', (editionID,)).fetchone()
+    copies_of_this_edition = db.execute('SELECT copyID FROM copies WHERE editionID == ? AND readerID IS NULL', (editionID,)).fetchall()
+    serial_numbers = [c['copyID'] for c in copies_of_this_edition]
+    return template("available_serial_numbers.tpl", title=edition['title'], serial_numbers=serial_numbers)
 
 
 @get('/add_new_reader_to_database')

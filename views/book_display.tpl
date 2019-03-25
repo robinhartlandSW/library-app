@@ -29,10 +29,11 @@
                 {{edition['title']}} <br />
                 {{edition['author']}}    <br />
                 ISBN: {{edition['ISBN']}} <br />
-                <div>
+                <form method="get" action="/available_serial_numbers">
+                    <input type="hidden" name="editionID" value="{{edition['ID']}}">
                     Copies in stock: {{edition['num_available_copies']}}
-                    <button class="see-available-copies-button"> see serial numbers of available copies...</button>
-                </div>
+                    <input type="submit" class="see-available-copies-button" value="see serial numbers of available copies...">
+                </form>
             </div>
             % end
 
