@@ -5,10 +5,10 @@ import sqlite3, caribou
 conn = sqlite3.connect(database_file)
 
 
-db_path = 'library.db'
-migrations_path = './migrations'
+#db_path = 'library.db'
+#migrations_path = './migrations'
 
-caribou.upgrade(db_path, migrations_path)
+#caribou.upgrade(db_path, migrations_path)
 
 # Setup
 

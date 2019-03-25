@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS editions (
         title VARCHAR(255) NULL,
         ISBN VARCHAR(255) NULL
     );
+
