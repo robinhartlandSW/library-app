@@ -1,38 +1,14 @@
 database_file = 'library.db'
 
 # Database Seeding:
-import sqlite3
+import sqlite3, caribou
 conn = sqlite3.connect(database_file)
 
-conn.execute("""CREATE TABLE IF NOT EXISTS editions (
-	ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	author VARCHAR(255) NULL,
-	title VARCHAR(255) NULL,
-	ISBN VARCHAR(255) NULL
-);"""
-)
 
-conn.execute("""CREATE TABLE IF NOT EXISTS copies (
-	copyID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	editionID INTEGER NOT NULL,
-	readerID INTEGER NULL,
+db_path = 'library.db'
+migrations_path = './migrations'
 
-	FOREIGN KEY (editionID) REFERENCES editions(ID),
-	FOREIGN KEY (readerID) REFERENCES readers(ID)
-);
-
-"""
-)
-
-conn.execute("""CREATE TABLE IF NOT EXISTS readers (
-	ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	firstName VARCHAR(255) NOT NULL,
-	lastName VARCHAR(255) NULL
-);
-"""
-)
-
-conn.commit()
+caribou.upgrade(db_path, migrations_path)
 
 # Setup
 
