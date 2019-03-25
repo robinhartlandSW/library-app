@@ -55,7 +55,6 @@ def librarian_home():
     return template('librarian_homepage.tpl')
 
 
-
 @get('/add_new_reader')
 def add_new_reader():
     return template('new_reader.tpl')
@@ -99,9 +98,6 @@ def return_book_to_database(db):
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
 
 
-    
-
-
 @post('/add_new_edition_to_database')
 def add_new_edition_to_database(db): 
     title = request.forms.get('title')
@@ -140,9 +136,6 @@ def add_new_edition():
 def add_new_copy(db, editionID):
     db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID,))
 
-
-
-
 @get('/view_library')
 def view_library(db):
     library = db.execute('SELECT * FROM editions').fetchall()
@@ -155,7 +148,6 @@ def add_new_reader_to_database(db):
     firstName = request.query["firstName"]
     lastName = request.query.get("lastName")
     db.execute("INSERT INTO readers(firstName, lastName) VALUES (?,?)", (firstName, lastName))
-
 
 
 run(host='localhost', port=8080)
