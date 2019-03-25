@@ -35,7 +35,8 @@ def reader_overview(db):
     IDs = db.execute("SELECT ID FROM readers WHERE firstName == ? AND lastName == ?", (names[0],names[1])).fetchone()
     if IDs != None:
         ID = IDs["ID"]
-        return template('reader_overview.tpl', ID=ID, reader_name=reader_name)
+        num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (ID,)).fetchone()[0]
+        return template('reader_overview.tpl', ID=ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed)
     else:
         # No readers of that name are registered in the library so redirect straight back to the librarian
         return librarian_home()

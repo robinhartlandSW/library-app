@@ -16,7 +16,7 @@
         <div id="reader-info">
             <h2>{{reader_name}}</h2>
             ID: {{ID}} <br />
-            Books borrowed: 5 of 8
+            Books borrowed: {{num_books_borrowed}} of 8
             <br />
             Fines due: £0.58
         </div>
