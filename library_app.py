@@ -48,7 +48,7 @@ def check_out_book(db):
     readerID = request.forms.get('readerID')
     db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
 
-    #TODO: return a suitable error message when trying to check out a disallowed book
+    #TODO: return a suitable error message when trying to check out a disallowed book (maybe use javascript to prevent this?)
     return template("book_checked_out.tpl")
 
 

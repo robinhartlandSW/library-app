@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Success!</title>
-        <link rel="stylesheet" type="text/css" href="/static/global.css" />
+        % include('stylesheet_link_subtemplate.tpl')
     </head>
     <body>
         <h1> Success </h1>

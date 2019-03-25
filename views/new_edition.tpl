@@ -2,7 +2,7 @@
     <head>
         <title>Register a new edition?</title>
         
-        <link rel="stylesheet" type="text/css" href="/static/global.css" />
+        % include('stylesheet_link_subtemplate.tpl')
     </head>
     <body>
 
