@@ -138,7 +138,7 @@ def add_new_edition():
 
 @get('/add_new_copy/<editionID>')
 def add_new_copy(db, editionID):
-    db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID))
+    db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID,))
 
 
 
