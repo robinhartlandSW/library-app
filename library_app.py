@@ -98,21 +98,32 @@ def return_book_to_database(db):
     serial_number = request.forms.get('serial_number')
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
 
+
+    
+
+
 @post('/add_new_edition_to_database')
 def add_new_edition_to_database(db): 
     title = request.forms.get('title')
     author = request.forms.get('author')
     ISBN = request.forms.get('ISBN')
-
     # TODO: check if either title+author, or ISBN, have been entered
-    
-    editionID = db.execute("INSERT INTO editions(author, title, ISBN) VALUES (?,?,?)", (author, title, ISBN)).lastrowid
-  
-    # Add a copy of this edition into the library,
-    # with the ID of the last book added as its editionID
+
+
+    edition_in_library = db.execute("SELECT * from editions WHERE ISBN == ?", (ISBN,)).fetchone()
+
+    if edition_in_library == None:
+        # edition is not already registered in the library, so log it in the database and save its ID in editionID
+        editionID = db.execute("INSERT INTO editions(author, title, ISBN) VALUES (?,?,?)", (author, title, ISBN)).lastrowid
+    else:
+        editionID = edition_in_library["ID"]
+
+    # Add a copy of this edition into the library
     copyID = db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID,)).lastrowid
 
-    return template('new_edition_added.tpl', serial_number=copyID)
+    return template('new_copy_added.tpl', serial_number=copyID)
+    
+
 
 @post('/register_new_reader_in_database')
 def register_new_reader_in_database(db):
