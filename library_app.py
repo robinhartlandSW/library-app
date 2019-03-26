@@ -13,6 +13,10 @@ def serve_static(file):
     return static_file(file, root='./static')
 
 # Routes
+@route('/img/<filename>')
+def fetch_book_cover(filename):
+    return static_file(filename, root='./img')
+
 @get('/')
 @get('/home')
 def librarian_home():
@@ -175,8 +179,6 @@ def fine_reader(db):
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     string_fine = str(fine)
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
-
-run(host='localhost', port=8080, debug=True)
 
 # Helper Functions
 
