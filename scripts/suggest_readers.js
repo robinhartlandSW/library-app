@@ -29,14 +29,20 @@ function find_matching_names(first_name, last_name) {
             }
             let reader_name_dropdown = document.getElementById("reader_name_dropdown")
 
+            // delete all elements from the dropdown
+            while (reader_name_dropdown > 0) {
+                reader_name_dropdown.remove(0);
+            }
+
             response.json().then(
                 function(suggested_names) {
                     for (let names of suggested_names) {
                         suggested_first_name = names['first_name']
                         suggested_last_name = names['last_name']
+                        ID = names['ID']
                 
                         new_option = document.createElement("option")
-                        new_option.text = suggested_first_name + suggested_last_name
+                        new_option.text = `${suggested_first_name} ${suggested_last_name} (ID ${ID})`
                         reader_name_dropdown.add(new_option)
                     }
                 }
