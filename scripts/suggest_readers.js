@@ -1,5 +1,5 @@
 function suggest_readers() {
-    let reader_name_dropdown = document.getElementById("reader_name_dropdown")
+    
 
     let first_name_input_box = document.getElementById("reader_first_name_input");
     let first_name = first_name_input_box.value;
@@ -9,14 +9,7 @@ function suggest_readers() {
 
     suggested_names = find_matching_names(first_name, last_name);
 
-    for (let names of suggested_names) {
-        suggested_first_name = names['first_name']
-        suggested_last_name = names['last_name']
-
-        new_option = document.createElement("option")
-        new_option.text = suggested_first_name + suggested_last_name
-        reader_name_dropdown.add(new_option)
-    }
+    
    
 
 }
@@ -34,7 +27,20 @@ function find_matching_names(first_name, last_name) {
             if (!response.ok) {
                 throw new Error(`HTTP error, status = ${response.status}`)
             }
-            return response.json();
+            let reader_name_dropdown = document.getElementById("reader_name_dropdown")
+
+            response.json().then(
+                function(suggested_names) {
+                    for (let names of suggested_names) {
+                        suggested_first_name = names['first_name']
+                        suggested_last_name = names['last_name']
+                
+                        new_option = document.createElement("option")
+                        new_option.text = suggested_first_name + suggested_last_name
+                        reader_name_dropdown.add(new_option)
+                    }
+                }
+            )
         }
     )
 
