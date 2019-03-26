@@ -19,6 +19,10 @@ def serve_script(file):
     return static_file(file, root = './scripts')
 
 # Routes
+@route('/img/<filename>')
+def fetch_book_cover(filename):
+    return static_file(filename, root='./img')
+
 @get('/')
 @get('/home')
 def librarian_home():

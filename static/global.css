@@ -25,7 +25,7 @@ h1 {
 
 .search-element-container {
     text-align: left;
-    width: 30%;
+    width: 45%;
     margin: 8px;
     box-sizing: border-box;
 }
@@ -82,15 +82,13 @@ h1 {
     justify-content: flex-end;
 }
 
-
-
 #or-area {
     width: 10%;
 }
 
 .block, .centred-block {
     margin: 30px;
-    background-color: cornflowerblue;
+    background-color: #ededed;
     border-color: burlywood;
 }
 
@@ -135,7 +133,7 @@ form {
 }
 
 #search-box{
-    background-color: lightgreen;
+    background-color: #ededed;
     margin: 30px;
     display: flex;
     justify-content: space-evenly;
@@ -156,4 +154,35 @@ form {
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 100px;
+}
+
+.book-info{
+    display: inline-block;
+    width: calc(100% - 228px);
+    padding: 30px;
+    vertical-align: top;
+}
+
+.book-info input[type="submit"] {
+    font-size:12px;
+    display:inline-block;
+    padding: 16px;
+}
+
+.book-cover {
+    display: inline-block;
+}
+
+.book-cover img {
+    width: 220px;
+    height: 327px;
+}
+
+.title-text {
+    font-size: 24px;
+    margin: 12px;
+}
+
+.info-text {
+    margin: 12px;
 }
