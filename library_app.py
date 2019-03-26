@@ -75,12 +75,22 @@ def check_out_book(db):
     current_fine = float(current_fine)
 
     if current_fine > 0:
-        return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.')
+        return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.', submessage = 'Return to the readers page and ensure that all fines are paid and there are no overdue books.')
 
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
 
     readerID = request.forms.get('readerID')
+
+    has_overdue_book = user_has_overdue_book(db, readerID)
+    if has_overdue_book[0] == True:
+        books_overdue = has_overdue_book[1]
+        bookstring = ''
+        for book in books_overdue:
+            bookstring += (str(book['copyID']) + ', ')
+        
+        return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
+
     db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
     db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
 
@@ -238,6 +248,19 @@ def is_book_overdue(db, book_id):
         return (True, days_late)
     else:
         return (False, 0)
+
+def user_has_overdue_book(db, user_id):
+    rented_books = db.execute('SELECT * FROM copies WHERE readerID = ?', (user_id,)).fetchall()
+    overdue_books = []
+    for book in rented_books:
+        ID = book['copyID']
+        overdue = is_book_overdue(db, ID)
+        if overdue[0] == True:
+            overdue_books.append(book)
+    if overdue_books == []:
+        return (False, [])
+    else:
+        return (True, overdue_books)
     
 
 run(host='localhost', port=8080, debug=True)

@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1> {{message}} </h1>
-        Return to the readers page and ensure all fines are paid.<br />
+        {{submessage}}.<br />
         To return to the homepage, click <a href = "/home"> here </a>
     </body>
 </html>
