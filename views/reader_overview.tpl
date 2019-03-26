@@ -18,7 +18,7 @@
             ID: {{ID}} <br />
             Books borrowed: {{num_books_borrowed}} of 8
             <br />
-            Fines due: £0.58
+            Fines due: {{fine}}
         </div>
         <div class="block">
             <form action="/check_out_book" method="post">
@@ -44,6 +44,10 @@
                                 <label for="serial_number" id="serial_number_label"> Serial number: </label>
                                 <input name="serial_number" id="serial_number" type = "number" class="input-box" required/>
                             </div>
+                            <div class="serial-number-input-wrapper">
+                                <label for="days_rented">Days Rented:</label><br/>
+                                <input name="days_rented" id="ISBN_input" type = "number" class="input-box" required/>
+                            </div>
                         </div>
                     </div>
                 
@@ -59,6 +63,7 @@
                     </div>
                 </div>
 
+
                 <input type="submit" value="Check out" />
 
 
@@ -67,18 +72,22 @@
         <div class="container half-width">
             <div class="block user-input-area">
                 <h2> Add charges/fines </h2>
-                Amount: £3.00
-                <br /> <br />
-                <button>add charge</button>
+                <form action ="/reader_overview/fine" method="post">
+                    <input type="hidden" name="user_id" value={{ID}}>
+                    Amount (£): <input type="text" name="added_fine"><br>
+                    <input type="submit" value="Submit">
+                </form>
             </div>
         </div>
         <div class="container half-width">
             <div class="block">
                 <div class = "user-input-area">
                     <h2> Record payment </h2>
-                    Amount: £0.50
-                    <br /> <br />
-                    <button>Record payment</button>
+                    <form action ="/reader_overview/pay_fine" method="post">
+                        <input type="hidden" name="user_id" value={{ID}}>
+                        Amount (£): <input type="text" name="paid_fine"><br>
+                    <input type="submit" value="Submit">
+                </form>
                 </div>
             </div>
         </div>
