@@ -60,18 +60,22 @@ def reader_overview(db):
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (reader_ID,)).fetchone()[0]
     string_fine = str(fine)
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
-    return template('reader_overview.tpl', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
+    return template('reader_overview.tpl', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ')
     
 
         
-
 @post('/check_out_book')
 def check_out_book(db): 
     title = request.forms.get('title')
     author = request.forms.get('author')
     serial_number = request.forms.get('serial_number')
     days_rented = request.forms.get('days_rented')
+    current_fine = request.forms.get('current_fine')[-3:-1]
     days_rented = int(days_rented)
+    current_fine = float(current_fine)
+
+    if current_fine > 0:
+        return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.')
 
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
@@ -191,7 +195,7 @@ def fine_reader(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     string_fine = str(fine)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED')
 
 @post('/reader_overview/pay_fine')
 def fine_reader(db):
@@ -206,7 +210,7 @@ def fine_reader(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     string_fine = str(fine)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID')
 
 # Helper Functions
 

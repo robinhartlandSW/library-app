@@ -11,7 +11,8 @@
             <a href="/home">Home</a>
         </div>
         <h1>
-            Registered reader overview
+            Registered reader overview <br/>
+            {{page_head_message}}
         </h1>
         <div id="reader-info">
             <h2>{{reader_name}}</h2>
@@ -33,6 +34,7 @@
                             <div class="label-input-wrapper">
                                 <label for="author_input">Author name:</label>
                                 <input type="text" id="author_input" name="author" class="input-box"/>
+                                <input type="hidden" id="current_fine" name="current_fine" value={{fine}}>
                             </div>
                             <div class="label-input-wrapper">
                                 <label for="title_input">Title:</label>
