@@ -2,12 +2,18 @@
 database_file = 'library-nomad.db'
 from bottle import get, post, install, run, request, route, template, static_file
 from bottle_sqlite import SQLitePlugin
+import json
+
 install(SQLitePlugin(dbfile=database_file))
 
 # Static content:
 @get('/static/<file:path>')
 def serve_static(file):
     return static_file(file, root='./static')
+
+@get('/scripts/<file:path>')
+def serve_script(file):
+    return static_file(file, root = './scripts')
 
 # Routes
 @get('/')
@@ -22,6 +28,19 @@ def add_new_reader():
 @get('/return_book')
 def return_book():
     return template('return_book.tpl')
+
+@post('/find_matching_names')
+def find_matching_names(db):
+    # Parse the JSON of the HTTP request
+    names = request.json
+
+    # find all the readers whose first name starts with what has been typed
+    matches = db.execute("SELECT * FROM readers WHERE firstName LIKE ? ", (names[0] + '%',)).fetchall()
+
+    parsed_matches = [{'first_name': m['firstName'], 'last_name': m['lastName'], 'ID': m['ID']} for m in matches]
+
+    # convert response to JSON
+    return json.dumps(parsed_matches)
 
 @post('/reader_overview')
 def reader_overview(db):
