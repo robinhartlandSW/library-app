@@ -1,0 +1,78 @@
+[33mcommit b60d622ec611f18c5a9b75f5caa9f852819aa865[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: a011dd6 f8056e0
+Author: Stefan Clarke <Stefan.Clarke@softwire.com>
+Date:   Tue Mar 26 13:58:31 2019 +0000
+
+    Merge branch 'master' of https://github.com/robinhartlandSW/library-app
+
+[1mdiff --cc library_app.py[m
+[1mindex e87007a,33c5ffe..8ed388b[m
+[1m--- a/library_app.py[m
+[1m+++ b/library_app.py[m
+[36m@@@ -38,12 -35,9 +38,12 @@@[m [mdef reader_overview(db)[m
+      IDs = db.execute("SELECT ID FROM readers WHERE firstName == ? AND lastName == ?", (names[0],names[1])).fetchone()[m
+      if IDs != None:[m
+          ID = IDs["ID"][m
+[32m +        fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (ID,)).fetchone()[0][m
+[32m +        string_fine = str(fine)[m
+          num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (ID,)).fetchone()[0][m
+[31m -        return template('reader_overview.tpl', ID=ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed)[m
+[32m +        return template('reader_overview.tpl', ID=ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine)[m
+      else:[m
+[31m-         [m
+[32m++[m
+          # No readers of that name are registered in the library so redirect straight back to the librarian[m
+          return librarian_home()[m
+  [m
+[36m@@@ -141,34 -130,18 +146,49 @@@[m [mdef add_new_reader_to_database(db)[m
+      lastName = request.query.get("lastName")[m
+      db.execute("INSERT INTO readers(firstName, lastName) VALUES (?,?)", (firstName, lastName))[m
+  [m
+[32m +@post('/reader_overview/fine')[m
+[32m +def fine_reader(db):[m
+[32m +    fine = request.forms.get('added_fine')[m
+[32m +    fine = float(fine)[m
+[32m +    user_id = request.forms.get('user_id')[m
+[32m +    current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0][m
+[32m +    current_fine = float(current_fine)[m
+[32m +    new_fine = current_fine + fine[m
+[32m +    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))[m
+[32m +    reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()[m
+[32m +    num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0][m
+[32m +    fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0][m
+[32m +    string_fine = str(fine)[m
+[32m +    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)[m
+[32m +[m
+[32m +@post('/reader_overview/pay_fine')[m
+[32m +def fine_reader(db):[m
+[32m +    fine = request.forms.get('paid_fine')[m
+[32m +    fine = float(fine)[m
+[32m +    user_id = request.forms.get('user_id')[m
+[32m +    current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0][m
+[32m +    current_fine = float(current_fine)[m
+[32m +    new_fine = current_fine - fine[m
+[32m +    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))[m
+[32m +    reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()[m
+[32m +    num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0][m
+[32m +    fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0][m
+[32m +    string_fine = str(fine)[m
+[32m +    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)[m
+[32m +[m
+[31m- run(host='localhost', port=8080, debug=True)[m
+[32m++run(host='localhost', port=8080, debug=True)[m
+[32m+ [m
+[32m+ # Helper Functions[m
+[32m+ [m
+[32m+ def refine_book_info (editions):[m
+[32m+     editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions][m
+[32m+     return editions[m
+[32m+ [m
+[32m+ def get_num_copies (db, editions):[m
+[32m+     for ed in editions:[m
+[32m+         ID = ed['ID'][m
+[32m+         num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0][m
+[32m+         ed['num_available_copies'] = num_available_copies[m
+[32m+     return editions[m
+[32m+ [m
+[31m -run(host='localhost', port=8080)[m
+[32m++run(host='localhost', port=8080)[m

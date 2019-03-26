@@ -4,6 +4,8 @@
 database_file = 'library-nomad.db'
 from bottle import get, post, install, run, request, route, template, static_file
 from bottle_sqlite import SQLitePlugin
+import json
+
 import datetime
 install(SQLitePlugin(dbfile=database_file))
 
@@ -11,6 +13,10 @@ install(SQLitePlugin(dbfile=database_file))
 @get('/static/<file:path>')
 def serve_static(file):
     return static_file(file, root='./static')
+
+@get('/scripts/<file:path>')
+def serve_script(file):
+    return static_file(file, root = './scripts')
 
 # Routes
 @get('/')
@@ -25,6 +31,19 @@ def add_new_reader():
 @get('/return_book')
 def return_book():
     return template('return_book.tpl')
+
+@post('/find_matching_names')
+def find_matching_names(db):
+    # Parse the JSON of the HTTP request
+    names = request.json
+
+    # find all the readers whose first name starts with what has been typed
+    matches = db.execute("SELECT * FROM readers WHERE firstName LIKE ? ", (names[0] + '%',)).fetchall()
+
+    parsed_matches = [{'first_name': m['firstName'], 'last_name': m['lastName'], 'ID': m['ID']} for m in matches]
+
+    # convert response to JSON
+    return json.dumps(parsed_matches)
 
 @post('/reader_overview')
 def reader_overview(db):
@@ -54,10 +73,13 @@ def check_out_book(db):
     serial_number = request.forms.get('serial_number')
     days_rented = request.forms.get('days_rented')
     days_rented = int(days_rented)
+
+    now = datetime.datetime.now()
+    due_date = now + datetime.timedelta(days = days_rented)
+
     readerID = request.forms.get('readerID')
     db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
-    due_date = datetime.datetime.now() + datetime.timedelta(days = days_rented)
-    db.execute('UPDATE copies SET due_date = ?', (due_date,))
+    db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
 
     #TODO: return a suitable error message when trying to check out a disallowed book (maybe use javascript to prevent this?)
     return template("book_checked_out.tpl")
@@ -69,12 +91,22 @@ def return_book_to_database(db):
     author = request.forms.get('author')
     ISBN = request.forms.get('ISBN')
     serial_number = request.forms.get('serial_number')
+    reader_id = db.execute('SELECT readerID FROM copies WHERE copyID = ?', (serial_number,)).fetchone()[0]
 
-    due_date = db.execute('SELECT due_date FROM copies WHERE copyID = ?', (serial_number,))
+    is_overdue = is_book_overdue(db, serial_number)
+    if is_overdue[0] == True:
+        user_old_fine = db.execute('SElECT fine FROM readers WHERE ID = ?',(reader_id,)).fetchone()
+        if user_old_fine is None:
+            user_old_fine = 0
+        else:
+            user_old_fine = user_old_fine[0]
+        user_new_fine = user_old_fine + is_overdue[1]
+        db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (user_new_fine, reader_id))
 
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
     return template("book_returned.tpl")
+
 
 @post('/add_new_edition_to_database')
 def add_new_edition_to_database(db): 
@@ -146,6 +178,7 @@ def add_new_reader_to_database(db):
     lastName = request.query.get("lastName")
     db.execute("INSERT INTO readers(firstName, lastName) VALUES (?,?)", (firstName, lastName))
 
+#add, pay fines
 @post('/reader_overview/fine')
 def fine_reader(db):
     fine = request.forms.get('added_fine')
@@ -176,8 +209,6 @@ def fine_reader(db):
     string_fine = str(fine)
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
 
-run(host='localhost', port=8080, debug=True)
-
 # Helper Functions
 
 def refine_book_info (editions):
@@ -191,4 +222,19 @@ def get_num_copies (db, editions):
         ed['num_available_copies'] = num_available_copies
     return editions
 
-run(host='localhost', port=8080)
+def is_book_overdue(db, book_id):
+    now = datetime.datetime.now()
+    due_date = db.execute('SELECT due_date FROM copies WHERE copyID = ?', (book_id,)).fetchone()
+    if due_date is None:
+        pass
+    due_date = due_date[0]
+    due_date = datetime.datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S.%f')
+    if now > due_date:
+        time_late = now - due_date
+        days_late = time_late.days
+        return (True, days_late)
+    else:
+        return (False, 0)
+    
+
+run(host='localhost', port=8080, debug=True)
