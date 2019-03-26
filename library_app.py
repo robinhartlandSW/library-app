@@ -43,7 +43,7 @@ def reader_overview(db):
         num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (ID,)).fetchone()[0]
         return template('reader_overview.tpl', ID=ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
     else:
-        
+
         # No readers of that name are registered in the library so redirect straight back to the librarian
         return librarian_home()
 
@@ -118,12 +118,17 @@ def add_new_copy(db, editionID):
 def view_library(db):
     library = db.execute('SELECT * FROM editions').fetchall()
     editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
+    editions = get_num_copies(db, editions)
+    return template('book_display.tpl', editions=editions)
 
-    for ed in editions:
-        ID = ed['ID']
-        num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0]
-        ed['num_available_copies'] = num_available_copies
-
+@get('/search')
+def search(db):
+    phrase = request.query.phrase
+    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', [phrase]).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', [phrase]).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', [phrase]).fetchall()
+    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
+    editions = get_num_copies(db, editions)
     return template('book_display.tpl', editions=editions)
 
 @get('/available_serial_numbers')
@@ -172,3 +177,18 @@ def fine_reader(db):
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
 
 run(host='localhost', port=8080, debug=True)
+
+# Helper Functions
+
+def refine_book_info (editions):
+    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions]
+    return editions
+
+def get_num_copies (db, editions):
+    for ed in editions:
+        ID = ed['ID']
+        num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0]
+        ed['num_available_copies'] = num_available_copies
+    return editions
+
+run(host='localhost', port=8080)

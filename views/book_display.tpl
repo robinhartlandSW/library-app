@@ -8,22 +8,18 @@
                 <a href="/home">Librarian homepage</a>
             </div>
             <h1>
-                Book search
+                Search For Books
             </h1>
             <div id="search-box">
-                <div class="search-element-container">
-                    {keyword search box}
-                </div> 
 
                 <div class="search-element-container">
-                    {dropdown menu to choose what to search}
-                </div>
-                <div  class="search-element-container button-container">
-                    <button>
-                        Search
-                    </button>
-                </div>
+                    <form action="/search">
+                        <input type="text" placeholder="Search..." name="phrase">
+                    </form>
+                </div> 
+
             </div>
+
             % for edition in editions:
             <div class="block">
                 {{edition['title']}} <br />
