@@ -2,6 +2,8 @@
     <head>
         <title>Book search</title>
         % include('stylesheet_link_subtemplate.tpl')
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="scripts/show_serial_numbers.js"></script>
     </head>
 
     <body>
@@ -26,11 +28,10 @@
                         {{edition['author']}}<br/>
                         ISBN: {{edition['ISBN']}}
                     </div>
-                    <form style="float:right" method="get" action="/available_serial_numbers">
-                        <input type="hidden" name="editionID" value="{{edition['ID']}}"><br><br><br><br><br>
+                    <div style="float:right">   
                         Copies in stock: {{edition['num_available_copies']}}<br>
-                        <input type="submit" class="see-available-copies-button" value="Available Copy Serial Numbers >">
-                    </form>
+                        <button class="see-available-copies-button"  onclick="show_serial_numbers({{edition['ID']}})"> Available Copy Serial Numbers > </button>
+                    </div>
                 </div>
             </div>
         % end
