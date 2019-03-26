@@ -108,9 +108,9 @@ def view_library(db):
 @get('/search')
 def search(db):
     phrase = request.query.phrase
-    matching_titles = db.execute('SELECT * FROM editions WHERE title = (?)', [phrase]).fetchall()
-    matching_authors = db.execute('SELECT * FROM editions WHERE author = (?)', [phrase]).fetchall()
-    matching_genres = db.execute('SELECT * FROM editions WHERE genre = (?)', [phrase]).fetchall()
+    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', [phrase]).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', [phrase]).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', [phrase]).fetchall()
     editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
     editions = get_num_copies(db, editions)
     return template('book_display.tpl', editions=editions)
