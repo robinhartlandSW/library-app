@@ -186,3 +186,7 @@ form {
 .info-text {
     margin: 12px;
 }
+
+.alert-box {
+    text-align: left;
+}

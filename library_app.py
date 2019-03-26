@@ -176,13 +176,13 @@ def search(db):
     editions = get_num_copies(db, editions)
     return template('book_display.tpl', editions=editions)
 
-@get('/available_serial_numbers')
+@post('/available_serial_numbers')
 def available_serial_numbers(db):
-    editionID = request.query.get("editionID")
+    editionID = request.json
     edition = db.execute('SELECT * FROM editions WHERE ID == ?', (editionID,)).fetchone()
     copies_of_this_edition = db.execute('SELECT copyID FROM copies WHERE editionID == ? AND readerID IS NULL', (editionID,)).fetchall()
     serial_numbers = [c['copyID'] for c in copies_of_this_edition]
-    return template("available_serial_numbers.tpl", title=edition['title'], serial_numbers=serial_numbers)
+    return json.dumps(serial_numbers)
 
 
 @get('/add_new_reader_to_database')
