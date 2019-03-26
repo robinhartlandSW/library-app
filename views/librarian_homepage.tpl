@@ -18,14 +18,14 @@
                     <label>Find a reader:</label>
                     <div>
                         <label for="reader_first_name_input">First name:</label>
-                        <input type="text" name="reader_name_input" id="reader_first_name_input" onchange="suggest_readers()" />
+                        <input type="text" id="reader_first_name_input" onchange="suggest_readers()" />
                     </div>
                     <div>
                         <label for="reader_last_name_input">Last name (optional):</label>
-                        <input type="text" name="reader_name_input" id="reader_last_name_input" />
+                        <input type="text" id="reader_last_name_input" />
                     </div>
 
-                    <select id="reader_name_dropdown">
+                    <select id="reader_name_dropdown" name="reader_name_input">
                         <option> select one... </option>
                     </select>
 
