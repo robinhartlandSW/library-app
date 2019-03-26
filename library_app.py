@@ -49,22 +49,17 @@ def find_matching_names(db):
 def reader_overview(db):
     reader_name = request.forms.get('reader_name_input')
 
-    # Split into first and last names 
-    names = reader_name.split(' ')
+    # The reader names are in the format Fred Smith (ID 12345)
+    # This section extracts the reader's ID
+    reader_ID = reader_name.split('(')[-1].rstrip(')').lstrip('ID ')
 
-    # Assume there's only one person with each name for now, and get the corresponding ID
-    #TODO: make reader selection be based on an ID rather than assuming only 2 names!
-    IDs = db.execute("SELECT ID FROM readers WHERE firstName == ? AND lastName == ?", (names[0],names[1])).fetchone()
-    if IDs != None:
-        ID = IDs["ID"]
-        fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (ID,)).fetchone()[0]
-        string_fine = str(fine)
-        num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (ID,)).fetchone()[0]
-        return template('reader_overview.tpl', ID=ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
-    else:
+    fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (reader_ID,)).fetchone()[0]
+    string_fine = str(fine)
+    num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
+    return template('reader_overview.tpl', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine)
+    
 
-        # No readers of that name are registered in the library so redirect straight back to the librarian
-        return librarian_home()
+        
 
 @post('/check_out_book')
 def check_out_book(db): 
