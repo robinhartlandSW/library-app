@@ -102,12 +102,17 @@ def add_new_copy(db, editionID):
 def view_library(db):
     library = db.execute('SELECT * FROM editions').fetchall()
     editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
+    editions = get_num_copies(db, editions)
+    return template('book_display.tpl', editions=editions)
 
-    for ed in editions:
-        ID = ed['ID']
-        num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0]
-        ed['num_available_copies'] = num_available_copies
-
+@get('/search')
+def search(db):
+    phrase = request.query.phrase
+    matching_titles = db.execute('SELECT * FROM editions WHERE title = (?)', [phrase]).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author = (?)', [phrase]).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre = (?)', [phrase]).fetchall()
+    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
+    editions = get_num_copies(db, editions)
     return template('book_display.tpl', editions=editions)
 
 @get('/available_serial_numbers')
@@ -125,5 +130,18 @@ def add_new_reader_to_database(db):
     lastName = request.query.get("lastName")
     db.execute("INSERT INTO readers(firstName, lastName) VALUES (?,?)", (firstName, lastName))
 
+
+# Helper Functions
+
+def refine_book_info (editions):
+    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions]
+    return editions
+
+def get_num_copies (db, editions):
+    for ed in editions:
+        ID = ed['ID']
+        num_available_copies = db.execute("SELECT COUNT (copyID) FROM copies WHERE readerID IS NULL AND editionID == ? ", (ID,)).fetchone()[0]
+        ed['num_available_copies'] = num_available_copies
+    return editions
 
 run(host='localhost', port=8080)
