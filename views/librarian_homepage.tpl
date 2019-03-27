@@ -36,8 +36,8 @@
                 <div class="centred-block">
                     <h2>RETURN A BOOK</h2><br/><br/><br/><br>
                     <div class="serial-no-container">
-                        <form style="width:100%" action="/return_book_to_database">
-                            <input type="text" placeholder="Serial No." name="serial_number">
+                        <form action="/return_book_to_database" method="POST">
+                            <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
                         </form>
                     </div>
                 </div>

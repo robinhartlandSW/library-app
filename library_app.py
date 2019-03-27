@@ -99,16 +99,11 @@ def check_out_book(db):
     #TODO: return a suitable error message when trying to check out a disallowed book (maybe use javascript to prevent this?)
     return template("book_checked_out.tpl")
 
-
 @post('/return_book_to_database')
 def return_book_to_database(db):
-    title = request.forms.get('title')
-    author = request.forms.get('author')
-    ISBN = request.forms.get('ISBN')
     serial_number = request.forms.get('serial_number')
     reader_id = db.execute('SELECT readerID FROM copies WHERE copyID = ?', (serial_number,)).fetchone()[0]
     message = ''
-
     is_overdue = is_book_overdue(db, serial_number)
     if is_overdue[0] == True:
         user_old_fine = db.execute('SElECT fine FROM readers WHERE ID = ?',(reader_id,)).fetchone()
@@ -119,15 +114,9 @@ def return_book_to_database(db):
         user_new_fine = user_old_fine + is_overdue[1]
         db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (user_new_fine, reader_id))
         message = f'BOOK RETURNED LATE. Reader fine now £{user_new_fine}'
-
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
     return template("book_returned.tpl", message = message)
-
-
-
-
-
 
 @post('/add_new_edition')
 def add_new_edition(db):
