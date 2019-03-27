@@ -54,7 +54,9 @@ def reader_overview(db):
 
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (reader_ID,)).fetchone()
     fine = reader['fine']
-    reader_name = `${reader['firstName']} ${reader['lastName']}`
+    first_name = reader['firstName']
+    last_name = reader['lastName']
+    reader_name = first_name + ' ' + last_name
     string_fine = str(fine)
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
 
@@ -160,7 +162,7 @@ def register_new_reader_in_database(db):
 
 @get('/add_new_edition')
 def add_new_edition():
-    return template('new_book')
+    return template('new_book.tpl')
 
 @get('/add_new_copy/<editionID>')
 def add_new_copy(db, editionID):
@@ -169,9 +171,9 @@ def add_new_copy(db, editionID):
 @get('/view_library')
 def view_library(db):
     library = db.execute('SELECT * FROM editions').fetchall()
-    editions = [{'title': e['title'], 'author' : e['author'], 'genre' : e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
+    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
     editions = get_num_copies(db, editions)
-    return template('book_display', editions=editions)
+    return template('book_display.tpl', editions=editions)
 
 @get('/search')
 def search(db):
@@ -282,13 +284,11 @@ def is_book_overdue(db, book_id):
     else:
         return (False, 0)
 
-<<<<<<< HEAD
 # Convert the format from the dropdown user lists into an ID
 # The reader names are in the format Fred Smith (ID 12345) in the dropdown list.
 def dropdown_field_to_id(reader_name_input):
     reader_ID = reader_name_input.split('(')[-1].rstrip(')').lstrip('ID ')
     return reader_ID
-=======
 def user_has_overdue_book(db, user_id):
     rented_books = db.execute('SELECT * FROM copies WHERE readerID = ?', (user_id,)).fetchall()
     overdue_books = []
@@ -318,7 +318,6 @@ def get_rented_books(db, reader_ID):
         rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
     return rented_book_list
     
->>>>>>> 1f585779db570a088f6563e39531f2217aaa4063
 
 
 run(host='localhost', port=8080, debug=True)
