@@ -1,5 +1,3 @@
-
-
 # Setup
 database_file = 'library-nomad.db'
 from bottle import get, post, install, run, request, route, template, static_file
@@ -125,6 +123,11 @@ def return_book_to_database(db):
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
     return template("book_returned.tpl", message = message)
+
+
+
+
+
 
 @post('/add_new_edition')
 def add_new_edition(db):
@@ -284,9 +287,6 @@ def user_has_overdue_book(db, user_id):
     if overdue_books == []:
         return (False, [])
     else:
-<<<<<<< HEAD
-        return (True, overdue_books)    
-=======
         return (True, overdue_books)
 
 def get_rented_books(db, reader_ID):
@@ -305,7 +305,6 @@ def get_rented_books(db, reader_ID):
         rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
     return rented_book_list
     
->>>>>>> a1905b0b29c75d99c52cc03a859f390ab974cf5c
 
 
 run(host='localhost', port=8080, debug=True)

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Librarian homepage</title>
+        <title>Librarian Home</title>
         % include('stylesheet_link_subtemplate.tpl')
         <script src="scripts/suggest_readers.js"></script>
     </head>
@@ -8,14 +8,12 @@
         <div id="other-view-link">
             <a href="/view_library">Go to book search view</a>
         </div>
-        <h1>
-            Librarian Homepage
-        </h1>
+        <h1>LIBRARIAN HOME</h1>
         <div class="container quarter-width">
 
             <div class="centred-block">
                 <form class="librarian-form" method="post" action="/reader_overview">
-                    <label>Find a reader:</label>
+                    <label>FIND A READER:</label>
                     <div>
                         <label for="reader_first_name_input">First name:</label>
                         <input type="text" id="reader_first_name_input" onchange="suggest_readers()" />
@@ -35,23 +33,26 @@
             </div>
         </div>
         <div class="big-button quarter-width">
-            <a href="/return_book">
                 <div class="centred-block">
-                    Return a book
+                    <h2>RETURN A BOOK</h2><br/><br/><br/><br>
+                    <div class="serial-no-container">
+                        <form style="width:100%" action="/return_book_to_database">
+                            <input type="text" placeholder="Serial No." name="serial_number">
+                        </form>
+                    </div>
                 </div>
-            </a>
         </div>
         <div class="big-button quarter-width">
             <a href="/add_new_edition">
                 <div class="centred-block">
-                    Add a new book
+                    ADD BOOKS AND COPIES
                 </div>
             </a>
         </div>
         <div class="big-button quarter-width">
             <a href="/add_new_reader">
                 <div class="centred-block">
-                    Add a new reader
+                    ADD A READER
                 </div>
             </a>
         </div>
