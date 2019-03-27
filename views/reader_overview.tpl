@@ -2,6 +2,8 @@
     <head>
         <title>Reader overview</title>
         % include('stylesheet_link_subtemplate.tpl')
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="scripts/popup.js"></script>
     </head>
     <body>
         <div id="other-view-link">
@@ -21,8 +23,11 @@
             <br />
             Fines due: {{fine}}
         </div>
+
+        % num_fine = fine[1:-1]
+
         <div class="block">
-            <form action="/check_out_book" method="post">
+            <form  id = "check_out" action="/check_out_book" method="post">
                 
                 <!-- hidden field to store user's ID -->
                 <input type="hidden" id="readerID" name="readerID" value = {{ID}} />
@@ -65,8 +70,16 @@
                     </div>
                 </div>
 
+                % import datetime
+                % overdue_books = 0
+                % now = datetime.datetime.now()
+                % for i in range(number_results):
+                    % due_date = book_list[i][3]
+                    % due_date_time = datetime.datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S')
+                    % if due_date_time < now:
+                        % overdue_books += 1
 
-                <input type="submit" value="Check out" />
+                <input type="submit" value="Check out" onclick = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{overdue_books}})' />
 
 
             </form>
@@ -115,5 +128,7 @@
                 % end
             </table>
         </div>
+
+    <button onclick='popup({{ID}})'> Button </button>
     </body>
 </html>
