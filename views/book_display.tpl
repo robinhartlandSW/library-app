@@ -32,7 +32,9 @@
                     <div id="num-available-copies-button">   
                         Copies in stock: {{edition['num_available_copies']}}<br>
                         % if edition['num_available_copies'] > 0:
-                            <button class="see-available-copies-button"  onclick="show_serial_numbers({{edition['ID']}})"> Available Copy Serial Numbers > </button>
+                            <button class="search-result-more-info-button"  onclick="show_serial_numbers({{edition['ID']}})"> See serial numbers of available copies > </button>
+                        % else:
+                            <button class="search-result-more-info-button" onclick="window.location.href = '/show_reservation_form/{{edition['ID']}}'"> Reserve a copy > </button>
                         % end
                     </div>               
                 </div>

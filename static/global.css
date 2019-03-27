@@ -190,9 +190,11 @@ form {
     text-align: left;
 }
 
-#num-available-copies-button {
+.search-result-more-info-button {
     float: right;
     text-align: right;
+}
+
 .add-form input[type="text"], .add-user-form input[type="text"] {
     padding: 10px;
     margin: 10px 10px;

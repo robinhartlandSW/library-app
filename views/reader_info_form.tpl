@@ -10,9 +10,6 @@
             <input type="text" id="reader_last_name_input" />
         </div>
 
-        % if serial_number:
-        <input type="hidden" name="serial_number" value="{{serial_number}}" />
-        % end
 
         <select id="reader_name_dropdown" name="reader_name_input">
             <option> select one... </option>
