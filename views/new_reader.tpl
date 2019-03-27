@@ -1,32 +1,26 @@
 <html>
+
     <head>
-        <title>New reader</title>
+        <title>Register User</title>
         % include('stylesheet_link_subtemplate.tpl')
     </head>
+
     <body>
+
         <div id="other-view-link">
             <a href="/view_library">Go to book search view</a>
         </div>
-        <div id="home-link">
-            <a href="/home">Home</a>
-        </div>
-        <h1>
-            Register a new reader
-        </h1>
-        <div class="block">
-            <form class="librarian-form" method="post" action="/register_new_reader_in_database">
-                <label for="first_name">First name: </label>
-                <input type="text" name="first_name" id="first_name" />
-                <br />
-                <label for="last_name">Last name: </label>
-                <input type="text" name="last_name" id="last_name" />
+        <div id="home-link"><a href="/home">Home</a></div>
 
-                
-                <br />
-                {access level dropdown list}
-                <br /><br />
-                <input type="submit" value="Add reader to library" />
+        <h1>REGISTER A NEW LIBRARY USER</h1>
+        <div class="block">
+            <form class="add-user-form" method="POST" action="/register_new_reader_in_database">
+                FIRST NAME: <input type="text" name="first_name" id="first_name"><br>
+                LAST NAME: <input type="text" name="last_name" id="last_name"><br>
+                <input type="submit" value="REGISTER USER">
             </form>
+            
         </div>
     </body>
+
 </html>

@@ -3,7 +3,7 @@
 }
 
 body {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: beige;
 }
 
@@ -17,8 +17,7 @@ body {
     float: left;
 }
 
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+h1, h2 {
     text-align: center;
     clear: both;
 }
@@ -89,8 +88,8 @@ h1 {
 .block, .centred-block {
     margin: 30px;
     background-color: #ededed;
-    border-color: burlywood;
 }
+
 
 .centred-block {
     height: 270px;
@@ -191,7 +190,72 @@ form {
     text-align: left;
 }
 
+<<<<<<< HEAD
 #num-available-copies-button {
     float: right;
     text-align: right;
+=======
+.add-form input[type="text"], .add-user-form input[type="text"] {
+    padding: 10px;
+    margin: 10px 10px;
+    float: none;
+    display:block;
+    width:100%;
+    border: 1px solid #ccc;
+    margin: 0px;
+    font-size: 16px;
+}
+
+.add-form input[type="submit"], .add-user-form input[type="submit"] {
+    background-color: whitesmoke;
+	border: none;
+	color: #424242;
+	padding: 12px 44px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border: 1px solid  #424242;
+	float: right;
+}
+
+.side-by-side {
+    margin:0;
+}
+
+.add-form{
+    width: calc(50% - 60px);
+    float: left;
+    overflow: hidden;
+    padding: 20px;
+    margin: 30px;
+    height: 520px;
+    background-color: #ededed;
+    border: 1px solid  #424242;
+}
+
+.add-user-form{
+    width: calc(100% - 60px);
+    padding: 20px;
+    margin: 40px;
+    background-color: #ededed;
+}
+
+.serial-no-container {
+    text-align: left;
+    width: 80%;
+    margin: 8px;
+    box-sizing: border-box;
+}
+
+.serial-no-container input[type=text] {
+    padding: 10px;
+    float: none;
+    display:block;
+    width:100%;
+    border: 1px solid #ccc;
+    margin: 0px;
+    font-size: 16px;
+>>>>>>> 1f585779db570a088f6563e39531f2217aaa4063
 }

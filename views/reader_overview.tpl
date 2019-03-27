@@ -11,7 +11,8 @@
             <a href="/home">Home</a>
         </div>
         <h1>
-            Registered reader overview
+            Registered reader overview <br/>
+            {{page_head_message}}
         </h1>
         <div id="reader-info">
             <h2>{{reader_name}}</h2>
@@ -33,6 +34,7 @@
                             <div class="label-input-wrapper">
                                 <label for="author_input">Author name:</label>
                                 <input type="text" id="author_input" name="author" class="input-box"/>
+                                <input type="hidden" id="current_fine" name="current_fine" value={{fine}}>
                             </div>
                             <div class="label-input-wrapper">
                                 <label for="title_input">Title:</label>
@@ -90,6 +92,28 @@
                 </form>
                 </div>
             </div>
+        </div> <br/>
+        <div class = "centred-block">
+            <h2>Rented Books</h2> <br/>
+
+            <table style="width:100%" id="search-table">
+                <tr>
+                    <td> Serial Number </td>
+                    <td> Title </td>
+                    <td> Author </td>
+                    <td> Date Due </td>
+                </tr>
+
+                % for i in range(number_results):
+                    %book = book_list[i]
+                    <tr>
+                        <td> {{book[0]}} </td>
+                        <td> {{book[1]}} </td>
+                        <td> {{book[2]}} </td>
+                        <td> {{book[3]}} </td>
+                    </tr>
+                % end
+            </table>
         </div>
     </body>
 </html>

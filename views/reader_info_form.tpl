@@ -1,6 +1,6 @@
 <div class="centred-block">
     <form class="librarian-form" method="post" action={{action}}>
-        <label>Find a reader:</label>
+        <label>FIND A READER:</label>
         <div>
             <label for="reader_first_name_input">First name:</label>
             <input type="text" id="reader_first_name_input" onchange="suggest_readers()" />
