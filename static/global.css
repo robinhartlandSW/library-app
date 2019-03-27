@@ -190,3 +190,8 @@ form {
 .alert-box {
     text-align: left;
 }
+
+#num-available-copies-button {
+    float: right;
+    text-align: right;
+}
