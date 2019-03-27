@@ -1,2 +1,2 @@
 -- SQL ALTER statements for database migration
-INSERT INTO editions(author, title, genre, ISBN) VALUES ("J.K. Rowling", "Harry Potter and the Deathly Hallows", "Fantasy", "9788497836036")
+INSERT INTO editions(author, title, genre, location, ISBN) VALUES ("J.K. Rowling", "Harry Potter and the Deathly Hallows", "Fantasy", "LEVEL 3 - JR0700811", "9788497836036")

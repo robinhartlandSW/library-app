@@ -2,13 +2,11 @@
     <head>
         <title>Book search</title>
         % include('stylesheet_link_subtemplate.tpl')
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="scripts/show_serial_numbers.js"></script>
     </head>
 
     <body>
         <div id="other-view-link">
-            <a href="/home">Librarian homepage</a>
+            <a style="text-decoration: none" href="/switch_to_librarian_view">SWITCH TO LIBRARIAN VIEW</a>
         </div>
         <h1>SEARCH THE LIBRARY</h1>
         <div id="search-box">
@@ -27,14 +25,9 @@
                     <div class="info-text">
                         {{edition['author']}}<br/>
                         {{edition['genre']}}<br/>
-                        ISBN: {{edition['ISBN']}}
-                    </div>               
-                    <div id="num-available-copies-button">   
-                        Copies in stock: {{edition['num_available_copies']}}<br>
-                        % if edition['num_available_copies'] > 0:
-                            <button class="see-available-copies-button"  onclick="show_serial_numbers({{edition['ID']}})"> Available Copy Serial Numbers > </button>
-                        % end
-                    </div>               
+                        ISBN: {{edition['ISBN']}}<br/><br><br><br><br><br><br> <!--TODO: no <br>s -->
+                        {{edition['num_available_copies']}}<br>
+                    </div>
                 </div>
             </div>
         % end

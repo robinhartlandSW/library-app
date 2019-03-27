@@ -10,6 +10,7 @@ body {
 #other-view-link {
     text-align: right;
     float: right;
+    margin: 20px 20px;
 }
 
 #home-link {
@@ -193,6 +194,9 @@ form {
 #num-available-copies-button {
     float: right;
     text-align: right;
+
+}
+
 .add-form input[type="text"], .add-user-form input[type="text"] {
     padding: 10px;
     margin: 10px 10px;

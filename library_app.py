@@ -21,11 +21,6 @@ def serve_script(file):
 def fetch_book_cover(filename):
     return static_file(filename, root='./img')
 
-@get('/')
-@get('/home')
-def librarian_home():
-    return template('librarian_homepage.tpl')
-
 @get('/add_new_reader')
 def add_new_reader():
     return template('new_reader.tpl')
@@ -33,6 +28,19 @@ def add_new_reader():
 @get('/return_book')
 def return_book():
     return template('return_book.tpl')
+
+
+@get('/')
+@get('/switch_to_librarian_view')
+def librarian_home():
+    return template('librarian_home')
+
+@get('/switch_to_borrower_view')
+def view_library(db):
+    library = db.execute('SELECT * FROM editions').fetchall()
+    editions = [{'title': e['title'], 'author' : e['author'], 'genre': e['genre'], 'location' : e['location'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
+    editions = check_availability(db, editions)
+    return template('borrower_home', editions=editions)
 
 @post('/find_matching_names')
 def find_matching_names(db):
@@ -168,13 +176,6 @@ def add_new_edition():
 def add_new_copy(db, editionID):
     db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID,))
 
-@get('/view_library')
-def view_library(db):
-    library = db.execute('SELECT * FROM editions').fetchall()
-    editions = [{'title': e['title'], 'author' : e['author'], 'genre': e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
-    editions = get_num_copies(db, editions)
-    return template('book_display.tpl', editions=editions)
-
 @get('/search')
 def search(db):
     phrase = request.query.phrase
@@ -184,6 +185,7 @@ def search(db):
     editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
     editions = get_num_copies(db, editions)
     return template('book_display.tpl', editions=editions)
+
 
 @post('/available_serial_numbers')
 def available_serial_numbers(db):
@@ -257,10 +259,18 @@ def fine_reader(db):
 
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results)
 
-# Helper Functions
+
+##### Helper Functions #####
 
 def refine_book_info (editions):
     editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions]
+    return editions
+
+def check_availability (db, editions):
+    editions = get_num_copies (db, editions)
+    for edition in editions:
+        if edition['num_available_copies'] != 0: edition['num_available_copies'] = ('AVAILABLE FROM ' + edition['location'])
+        else: edition['num_available_copies'] = 'UNAVAILABLE: PLEASE SEE THE LIBRARIAN TO RESERVE'
     return editions
 
 def get_num_copies (db, editions):

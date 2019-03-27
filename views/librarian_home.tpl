@@ -6,7 +6,7 @@
     </head>
     <body>
         <div id="other-view-link">
-            <a href="/view_library">Go to book search view</a>
+            <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
         </div>
         <h1>LIBRARIAN HOME</h1>
         <div class="container quarter-width">
