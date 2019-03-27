@@ -1,3 +1,5 @@
 .hg/
 *.db
 build/
+venv/
+.vscode/
