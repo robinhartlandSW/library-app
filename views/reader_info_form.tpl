@@ -1,0 +1,24 @@
+<div class="centred-block">
+    <form class="librarian-form" method="post" action={{action}}>
+        <label>Find a reader:</label>
+        <div>
+            <label for="reader_first_name_input">First name:</label>
+            <input type="text" id="reader_first_name_input" onchange="suggest_readers()" />
+        </div>
+        <div>
+            <label for="reader_last_name_input">Last name (optional):</label>
+            <input type="text" id="reader_last_name_input" />
+        </div>
+
+        % if serial_number:
+        <input type="hidden" name="serial_number" value="{{serial_number}}" />
+        % end
+
+        <select id="reader_name_dropdown" name="reader_name_input">
+            <option> select one... </option>
+        </select>
+
+        <input type="submit" value="{{button_text}}" />
+        {{extra_text}}
+    </form>
+</div>

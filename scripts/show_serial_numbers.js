@@ -19,7 +19,9 @@ function show_serial_numbers(editionID) {
                     
                     for (let serial_number of serial_numbers) {
                         let list_element = document.createElement("LI");
-                        list_element.innerText = serial_number;
+                        form = form_reserving_book(serial_number)
+                        list_element.appendChild(form);
+
                         serial_number_list.appendChild(list_element);
                     }
                 
@@ -34,4 +36,24 @@ function show_serial_numbers(editionID) {
         }
     )
 
+}
+
+function form_reserving_book(serial_number) {
+    let form = document.createElement("FORM");
+    form.method = "get";
+    form.action = `/show_reservation_form/${serial_number}`;
+
+    let reserve_button = document.createElement("INPUT");
+    reserve_button.setAttribute("type", "submit");
+    reserve_button.setAttribute("id", serial_number)
+    reserve_button.value = "Reserve";
+
+    let label = document.createElement("LABEL")
+    label.htmlFor = serial_number;
+    label.innerText = serial_number;
+
+    form.appendChild(label);
+    form.appendChild(reserve_button);
+
+    return form;
 }

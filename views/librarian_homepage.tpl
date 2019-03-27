@@ -2,7 +2,7 @@
     <head>
         <title>Librarian homepage</title>
         % include('stylesheet_link_subtemplate.tpl')
-        <script src="scripts/suggest_readers.js"></script>
+        <script src="/scripts/suggest_readers.js"></script>
     </head>
     <body>
         <div id="other-view-link">
@@ -12,27 +12,7 @@
             Librarian Homepage
         </h1>
         <div class="container quarter-width">
-
-            <div class="centred-block">
-                <form class="librarian-form" method="post" action="/reader_overview">
-                    <label>Find a reader:</label>
-                    <div>
-                        <label for="reader_first_name_input">First name:</label>
-                        <input type="text" id="reader_first_name_input" onchange="suggest_readers()" />
-                    </div>
-                    <div>
-                        <label for="reader_last_name_input">Last name (optional):</label>
-                        <input type="text" id="reader_last_name_input" />
-                    </div>
-
-                    <select id="reader_name_dropdown" name="reader_name_input">
-                        <option> select one... </option>
-                    </select>
-
-                    <input type="submit" value="Enter account" />
-                    for loans and fines.
-                </form>
-            </div>
+            % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", serial_number=0)
         </div>
         <div class="big-button quarter-width">
             <a href="/return_book">
