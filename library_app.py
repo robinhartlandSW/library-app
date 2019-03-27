@@ -216,7 +216,10 @@ def reserve_book(db):
     serial_number = request.forms.get('serial_number')
     reader_name_dropdown = request.forms.get('reader_name_input')
     reserver_ID = dropdown_field_to_id(reader_name_dropdown)
-    db.execute("UPDATE copies SET reserverID = ? WHERE copyID = ?", (reserver_ID, serial_number))
+
+    edition_ID = request.forms.get('edition_ID')
+    date = datetime.datetime.now()
+    db.execute("INSERT INTO reservations(reserverID, editionID, datePlaced) VALUES (reserver_ID, edition_ID ,date)")
 
     
 
