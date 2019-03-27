@@ -10,7 +10,7 @@
             {{edition['title']}} by {{edition['author']}}, ISBN {{edition['ISBN']}}
         </div>
         <div>
-            % include('reader_info_form.tpl', action = '/reserve_book', button_text='Reserve book', extra_text='<input type="hidden" name="edition_ID" value=' + edition['ID'])
+            % include('reader_info_form.tpl', action = '/reserve_book', button_text='Reserve book', extra_text="", edition_ID = edition['ID'])
         </div>
     </body>
 
