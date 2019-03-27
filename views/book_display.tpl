@@ -31,6 +31,7 @@
                     </div>               
                     <div id="num-available-copies-button">   
                         Copies in stock: {{edition['num_available_copies']}}<br>
+                        Location: TODO!!
                         % if edition['num_available_copies'] > 0:
                             <button class="search-result-more-info-button"  onclick="show_serial_numbers({{edition['ID']}})"> See serial numbers of available copies > </button>
                         % else:
