@@ -38,6 +38,8 @@ def search(db):
 
 ##### LIBRARIAN #####
 
+@route('/home')
+@route('/')
 @route('/switch_to_librarian_view')
 def switch_to_librarian_view(db):
     redirect ('/librarian_search?phrase=')
@@ -149,7 +151,8 @@ def add_new_edition(db):
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
         edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
-        return template('book_display')
+        #TODO: display user added confirmation
+        document.getElementById("new_reader_form").reset()
     #TODO: else error message book already exists
 
 @post('/add_new_copy_by_ISBN')
