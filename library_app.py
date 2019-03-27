@@ -210,7 +210,7 @@ def reserve_book(db):
     reserver_ID = dropdown_field_to_id(reader_name_dropdown)
     edition_ID = request.forms.get('edition_ID')
     date = datetime.datetime.now()
-    db.execute("INSERT INTO reservations(reserverID, editionID, datePlaced) VALUES (reserver_ID, edition_ID ,date)")
+    db.execute("INSERT INTO reservations(reserver_ID, editionID, datePlaced) VALUES (?, ?, ?)", (reserver_ID, edition_ID ,date))
 
 @get('/show_reservation_form/<serial_number>')
 def show_reservation_form(serial_number, db):
