@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS editions (
         author VARCHAR(255) NULL,
         title VARCHAR(255) NULL,
 	genre VARCHAR(255) NULL,
-        ISBN VARCHAR(255) NULL
+        ISBN VARCHAR(255) NULL UNIQUE
     );
 

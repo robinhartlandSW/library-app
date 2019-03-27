@@ -111,27 +111,38 @@ def return_book_to_database(db):
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
     return template("book_returned.tpl")
 
-
-@post('/add_new_edition_to_database')
-def add_new_edition_to_database(db): 
+@post('/add_new_edition')
+def add_new_edition(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
+    genre = request.forms.get('genre')
     ISBN = request.forms.get('ISBN')
-    # TODO: check if either title+author, or ISBN, have been entered
-    edition_in_library = db.execute("SELECT * from editions WHERE ISBN == ?", (ISBN,)).fetchone()
+    check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
+    if check_existence == None:
+        edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
+        return template('new_edition')
+    #TODO: else error message book already exists
 
-    if edition_in_library == None:
-        # edition is not already registered in the library, so log it in the database and save its ID in editionID
-        editionID = db.execute("INSERT INTO editions(author, title, ISBN) VALUES (?,?,?)", (author, title, ISBN)).lastrowid
-    else:
-        editionID = edition_in_library["ID"]
+@post('/add_new_copy_by_ISBN')
+def add_new_copy(db):
+    ISBN = request.forms.get('ISBN')
+    book_edition = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
+    book_id = book_edition['ID']
+    if book_edition != None:
+        copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
+        return template('new_copy_added', serial_number=copy_id)
+    #TODO: else error message book does not exist
 
-    # Add a copy of this edition into the library
-    copyID = db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID,)).lastrowid
-
-    return template('new_copy_added.tpl', serial_number=copyID)
-    
-
+@post('/add_new_copy_by_title_author')
+def add_new_copy(db):
+    title = request.forms.get('title')
+    author = request.forms.get('author')
+    book_edition = db.execute("SELECT * FROM editions WHERE title = (?) AND author = author", [title]).fetchone()
+    book_id = book_edition['ID']
+    if book_edition != None:
+        copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
+        return template('new_copy_added', serial_number=copy_id)
+    #TODO: else error message book does not exist
 
 @post('/register_new_reader_in_database')
 def register_new_reader_in_database(db):
@@ -140,7 +151,6 @@ def register_new_reader_in_database(db):
     fine = 0
     db.execute("INSERT INTO readers(firstName, lastName, fine) VALUES (?, ?, ?)", (first_name, last_name, fine))
     return template('new_reader')
-
 
 @get('/add_new_edition')
 def add_new_edition():
@@ -160,9 +170,9 @@ def view_library(db):
 @get('/search')
 def search(db):
     phrase = request.query.phrase
-    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', [phrase]).fetchall()
-    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', [phrase]).fetchall()
-    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', [phrase]).fetchall()
+    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
     editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
     editions = get_num_copies(db, editions)
     return template('book_display.tpl', editions=editions)
