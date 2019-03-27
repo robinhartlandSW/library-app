@@ -129,7 +129,7 @@ def add_new_edition(db):
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
         edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
-        return template('new_edition')
+        return template('book_display')
     #TODO: else error message book already exists
 
 @post('/add_new_copy_by_ISBN')
