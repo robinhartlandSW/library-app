@@ -49,13 +49,12 @@ def find_matching_names(db):
 
 @post('/reader_overview')
 def reader_overview(db):
-    reader_name = request.forms.get('reader_name_input')
+    reader_name_dropdown = request.forms.get('reader_name_input')
+    reader_ID = dropdown_field_to_id(reader_name_dropdown)
 
-    # The reader names are in the format Fred Smith (ID 12345)
-    # This section extracts the reader's ID
-    reader_ID = reader_name.split('(')[-1].rstrip(')').lstrip('ID ')
-
-    fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (reader_ID,)).fetchone()[0]
+    reader = db.execute('SELECT * FROM readers WHERE ID = ?', (reader_ID,)).fetchone()
+    fine = reader['fine']
+    reader_name = `${reader['firstName']} ${reader['lastName']}`
     string_fine = str(fine)
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
 
@@ -199,6 +198,24 @@ def add_new_reader_to_database(db):
     lastName = request.query.get("lastName")
     db.execute("INSERT INTO readers(firstName, lastName) VALUES (?,?)", (firstName, lastName))
 
+@post('/reserve_book')
+def reserve_book(db):
+    serial_number = request.forms.get('serial_number')
+    reader_name_dropdown = request.forms.get('reader_name_input')
+    reserver_ID = dropdown_field_to_id(reader_name_dropdown)
+    db.execute("UPDATE copies SET reserverID = ? WHERE copyID = ?", (reserver_ID, serial_number))
+
+    
+
+@get('/show_reservation_form/<serial_number>')
+def show_reservation_form(serial_number, db):
+    copy = db.execute("SELECT * FROM copies WHERE copyID = ?", (serial_number,)).fetchone()
+    editionID = copy['editionID']
+
+    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone() 
+    return template("reserve_book.tpl", serial_number=serial_number, edition=edition)
+
+
 #add, pay fines
 @post('/reader_overview/fine')
 def fine_reader(db):
@@ -265,6 +282,13 @@ def is_book_overdue(db, book_id):
     else:
         return (False, 0)
 
+<<<<<<< HEAD
+# Convert the format from the dropdown user lists into an ID
+# The reader names are in the format Fred Smith (ID 12345) in the dropdown list.
+def dropdown_field_to_id(reader_name_input):
+    reader_ID = reader_name_input.split('(')[-1].rstrip(')').lstrip('ID ')
+    return reader_ID
+=======
 def user_has_overdue_book(db, user_id):
     rented_books = db.execute('SELECT * FROM copies WHERE readerID = ?', (user_id,)).fetchall()
     overdue_books = []
@@ -294,6 +318,7 @@ def get_rented_books(db, reader_ID):
         rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
     return rented_book_list
     
+>>>>>>> 1f585779db570a088f6563e39531f2217aaa4063
 
 
 run(host='localhost', port=8080, debug=True)

@@ -190,6 +190,11 @@ form {
     text-align: left;
 }
 
+<<<<<<< HEAD
+#num-available-copies-button {
+    float: right;
+    text-align: right;
+=======
 .add-form input[type="text"], .add-user-form input[type="text"] {
     padding: 10px;
     margin: 10px 10px;
@@ -252,4 +257,5 @@ form {
     border: 1px solid #ccc;
     margin: 0px;
     font-size: 16px;
+>>>>>>> 1f585779db570a088f6563e39531f2217aaa4063
 }

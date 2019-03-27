@@ -28,11 +28,13 @@
                         {{edition['author']}}<br/>
                         {{edition['genre']}}<br/>
                         ISBN: {{edition['ISBN']}}
-                    </div>
-                    <div style="float:right">   
+                    </div>               
+                    <div id="num-available-copies-button">   
                         Copies in stock: {{edition['num_available_copies']}}<br>
-                        <button class="see-available-copies-button"  onclick="show_serial_numbers({{edition['ID']}})"> Available Copy Serial Numbers > </button>
-                    </div>
+                        % if edition['num_available_copies'] > 0:
+                            <button class="see-available-copies-button"  onclick="show_serial_numbers({{edition['ID']}})"> Available Copy Serial Numbers > </button>
+                        % end
+                    </div>               
                 </div>
             </div>
         % end
