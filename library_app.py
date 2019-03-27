@@ -211,11 +211,9 @@ def reserve_book(db):
 
 @get('/show_reservation_form/<serial_number>')
 def show_reservation_form(serial_number, db):
-    copy = db.execute("SELECT * FROM copies WHERE copyID = ?", (serial_number,)).fetchone()
-    editionID = copy['editionID']
+    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (serial_number,)).fetchone()
 
-    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone() 
-    return template("reserve_book.tpl", serial_number=serial_number, edition=edition)
+    return template("reserve_book.tpl", edition=edition)
 
 
 #add, pay fines

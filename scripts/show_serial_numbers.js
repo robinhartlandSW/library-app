@@ -19,7 +19,7 @@ function show_serial_numbers(editionID) {
                     
                     for (let serial_number of serial_numbers) {
                         let list_element = document.createElement("LI");
-                        form = form_reserving_book(serial_number)
+                        form = book_info_form(serial_number)
                         list_element.appendChild(form);
 
                         serial_number_list.appendChild(list_element);
@@ -38,15 +38,17 @@ function show_serial_numbers(editionID) {
 
 }
 
-function form_reserving_book(serial_number) {
+function book_info_form(serial_number) {
     let form = document.createElement("FORM");
     form.method = "get";
-    form.action = `/show_reservation_form/${serial_number}`;
+
+    // TODO: location page
+    form.action = `/`;
 
     let reserve_button = document.createElement("INPUT");
     reserve_button.setAttribute("type", "submit");
     reserve_button.setAttribute("id", serial_number)
-    reserve_button.value = "Reserve";
+    reserve_button.value = "See location";
 
     let label = document.createElement("LABEL")
     label.htmlFor = serial_number;
