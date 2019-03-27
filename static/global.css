@@ -191,10 +191,13 @@ form {
     text-align: left;
 }
 
-#num-available-copies-button {
+.search-result-more-info-button {
     float: right;
     text-align: right;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 76a6278eb3c2aa16be574a1dc6ab583fb55df9f4
 }
 
 .add-form input[type="text"], .add-user-form input[type="text"] {
