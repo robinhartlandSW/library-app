@@ -3,7 +3,7 @@
 }
 
 body {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: beige;
 }
 
@@ -17,8 +17,7 @@ body {
     float: left;
 }
 
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+h1, h2 {
     text-align: center;
     clear: both;
 }
@@ -89,7 +88,6 @@ h1 {
 .block, .centred-block {
     margin: 30px;
     background-color: #ededed;
-    border-color: burlywood;
 }
 
 .centred-block {
@@ -190,3 +188,46 @@ form {
 .alert-box {
     text-align: left;
 }
+.add-form input[type="text"] {
+    padding: 10px;
+    margin: 10px 10px;
+    float: none;
+    display:block;
+    width:100%;
+    border: 1px solid #ccc;
+    margin: 0px;
+    font-size: 16px;
+}
+
+.side-by-side {
+    margin:0;
+}
+
+.add-form {
+    width: calc(50% - 60px);
+    float: left;
+    overflow: hidden;
+    padding: 20px;
+    margin: 30px;
+    height: 520px;
+    background-color: #ededed;
+    border: 1px solid  #424242;
+}
+
+.add-form input[type="submit"] {
+    background-color: whitesmoke;
+	border: none;
+	color: #424242;
+	padding: 12px 44px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border: 1px solid  #424242;
+	float: right;
+}
+
+
+
+
