@@ -161,7 +161,7 @@ def register_new_reader_in_database(db):
 
 @get('/add_new_edition')
 def add_new_edition():
-    return template('new_book.tpl')
+    return template('new_book')
 
 @get('/add_new_copy/<editionID>')
 def add_new_copy(db, editionID):
@@ -170,9 +170,9 @@ def add_new_copy(db, editionID):
 @get('/view_library')
 def view_library(db):
     library = db.execute('SELECT * FROM editions').fetchall()
-    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
+    editions = [{'title': e['title'], 'author' : e['author'], 'genre' : e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
     editions = get_num_copies(db, editions)
-    return template('book_display.tpl', editions=editions)
+    return template('book_display', editions=editions)
 
 @get('/search')
 def search(db):

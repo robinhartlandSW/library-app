@@ -26,6 +26,7 @@
                     <div class="title-text">{{edition['title']}}</div>
                     <div class="info-text">
                         {{edition['author']}}<br/>
+                        {{edition['genre']}}<br/>
                         ISBN: {{edition['ISBN']}}
                     </div>
                     <div style="float:right">   
