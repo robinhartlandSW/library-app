@@ -45,17 +45,11 @@ function book_info_form(serial_number) {
     // TODO: location page
     form.action = `/`;
 
-    let reserve_button = document.createElement("INPUT");
-    reserve_button.setAttribute("type", "submit");
-    reserve_button.setAttribute("id", serial_number)
-    reserve_button.value = "See location";
-
     let label = document.createElement("LABEL")
     label.htmlFor = serial_number;
     label.innerText = serial_number;
 
     form.appendChild(label);
-    form.appendChild(reserve_button);
 
     return form;
 }
