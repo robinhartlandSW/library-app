@@ -34,7 +34,7 @@ def search(db):
     matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
     matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
     editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
-    editions = check_availability(db, editions)
+    editions = list({e['ID']:e for e in check_availability(db, editions)}.values())
     return template('borrower_home', editions=editions)
 
 
@@ -51,7 +51,7 @@ def librarian_search(db):
     matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
     matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
     editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
-    editions = get_num_copies(db, editions)
+    editions = list({e['ID']:e for e in get_num_copies(db, editions)}.values())
     return template('librarian_home', editions=editions)
 
 @get('/add_new_reader')
