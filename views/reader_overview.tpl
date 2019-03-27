@@ -73,16 +73,8 @@
                     </div>
                 </div>
 
-                % import datetime
-                % overdue_books = 0
-                % now = datetime.datetime.now()
-                % for i in range(number_results):
-                    % due_date = book_list[i][3]
-                    % due_date_time = datetime.datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S')
-                    % if due_date_time < now:
-                        % overdue_books += 1
 
-                <input type="submit" value="Check out" onclick = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{overdue_books}})' />
+                <input type="submit" value="Check out" onclick = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{num_overdue_books}})' />
 
 
             </form>

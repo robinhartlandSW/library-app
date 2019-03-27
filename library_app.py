@@ -86,7 +86,10 @@ def reader_overview(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
     rented_book_list = get_rented_books(db, reader_ID)
     number_results = len(rented_book_list)
-    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results)
+
+    overdue_books = number_overdue_books(number_results, rented_book_list)
+
+    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books)
     
 
         
@@ -237,8 +240,9 @@ def fine_reader(db):
 
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
+    overdue_books = number_overdue_books(number_results, rented_book_list)
 
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results)
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books)
 
 @post('/reader_overview/pay_fine')
 def fine_reader(db):
@@ -255,7 +259,8 @@ def fine_reader(db):
     string_fine = str(fine)
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results)
+    overdue_books = number_overdue_books(number_results, rented_book_list)
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books)
 
 
 ##### HELPER FUNCTIONS #####
@@ -332,6 +337,17 @@ def get_rented_books(db, reader_ID):
     for i in range(number_results):
         rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
     return rented_book_list
+
+def number_overdue_books(number_results, rented_book_list):
+    import datetime
+    overdue_books = 0
+    now = datetime.datetime.now()
+    for i in range(number_results):
+        due_date = rented_book_list[i][3]
+        due_date_time = datetime.datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S')
+        if due_date_time < now:
+            overdue_books += 1
+    return overdue_books
     
 
 
