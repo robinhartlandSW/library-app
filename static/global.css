@@ -189,7 +189,8 @@ form {
 .alert-box {
     text-align: left;
 }
-.add-form input[type="text"] {
+
+.add-form input[type="text"], .add-user-form input[type="text"] {
     padding: 10px;
     margin: 10px 10px;
     float: none;
@@ -200,22 +201,7 @@ form {
     font-size: 16px;
 }
 
-.side-by-side {
-    margin:0;
-}
-
-.add-form {
-    width: calc(50% - 60px);
-    float: left;
-    overflow: hidden;
-    padding: 20px;
-    margin: 30px;
-    height: 520px;
-    background-color: #ededed;
-    border: 1px solid  #424242;
-}
-
-.add-form input[type="submit"] {
+.add-form input[type="submit"], .add-user-form input[type="submit"] {
     background-color: whitesmoke;
 	border: none;
 	color: #424242;
@@ -229,6 +215,28 @@ form {
 	float: right;
 }
 
+.side-by-side {
+    margin:0;
+}
+
+.add-form{
+    width: calc(50% - 60px);
+    float: left;
+    overflow: hidden;
+    padding: 20px;
+    margin: 30px;
+    height: 520px;
+    background-color: #ededed;
+    border: 1px solid  #424242;
+}
+
+.add-user-form{
+    width: calc(100% - 60px);
+    padding: 20px;
+    margin: 40px;
+    background-color: #ededed;
+}
+
 .serial-no-container {
     text-align: left;
     width: 80%;
@@ -238,6 +246,7 @@ form {
 
 .serial-no-container input[type=text] {
     padding: 10px;
+    float: none;
     display:block;
     width:100%;
     border: 1px solid #ccc;
