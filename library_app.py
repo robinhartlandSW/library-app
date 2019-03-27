@@ -30,12 +30,10 @@ def switch_to_borrower_view(db):
 @get('/borrower_search')
 def search(db):
     phrase = request.query.phrase
-    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
-    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
-    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
-    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
-    editions = list({e['ID']:e for e in check_availability(db, editions)}.values())
-    return template('borrower_home', editions=editions)
+    if phrase == '': return template ('borrower_home', editions=[])
+    search_results = get_search_results(db, phrase)
+    search_results = list({e['ID']:e for e in check_availability(db, search_results)}.values())
+    return template('borrower_home', editions=search_results)
 
 
 ##### LIBRARIAN #####
@@ -47,20 +45,18 @@ def switch_to_librarian_view(db):
 @get('/librarian_search')
 def librarian_search(db):
     phrase = request.query.phrase
-    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
-    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
-    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
-    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
-    editions = list({e['ID']:e for e in get_num_copies(db, editions)}.values())
-    return template('librarian_home', editions=editions)
+    if phrase == '': return template('librarian_home', editions=[])
+    search_results = get_search_results(db, phrase)
+    search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
+    return template('librarian_home', editions=search_results)
 
 @get('/add_new_reader')
 def add_new_reader():
-    return template('new_reader.tpl')
+    return template('new_reader')
 
 @get('/return_book')
 def return_book():
-    return template('return_book.tpl')
+    return template('return_book')
 
 @post('/find_matching_names')
 def find_matching_names(db):
@@ -79,7 +75,6 @@ def find_matching_names(db):
 def reader_overview(db):
     reader_name_dropdown = request.forms.get('reader_name_input')
     reader_ID = dropdown_field_to_id(reader_name_dropdown)
-
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (reader_ID,)).fetchone()
     fine = reader['fine']
     first_name = reader['firstName']
@@ -87,11 +82,9 @@ def reader_overview(db):
     reader_name = first_name + ' ' + last_name
     string_fine = str(fine)
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
-
     rented_book_list = get_rented_books(db, reader_ID)
     number_results = len(rented_book_list)
-
-    return template('reader_overview.tpl', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results)
+    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results)
     
 
         
@@ -204,7 +197,6 @@ def available_serial_numbers(db):
     serial_numbers = [c['copyID'] for c in copies_of_this_edition]
     return json.dumps(serial_numbers)
 
-
 @get('/add_new_reader_to_database')
 def add_new_reader_to_database(db):
     firstName = request.query["firstName"]
@@ -216,12 +208,9 @@ def reserve_book(db):
     serial_number = request.forms.get('serial_number')
     reader_name_dropdown = request.forms.get('reader_name_input')
     reserver_ID = dropdown_field_to_id(reader_name_dropdown)
-
     edition_ID = request.forms.get('edition_ID')
     date = datetime.datetime.now()
     db.execute("INSERT INTO reservations(reserverID, editionID, datePlaced) VALUES (reserver_ID, edition_ID ,date)")
-
-    
 
 @get('/show_reservation_form/<serial_number>')
 def show_reservation_form(serial_number, db):
@@ -229,8 +218,6 @@ def show_reservation_form(serial_number, db):
 
     return template("reserve_book.tpl", edition=edition)
 
-
-#add, pay fines
 @post('/reader_overview/fine')
 def fine_reader(db):
     fine = request.forms.get('added_fine')
@@ -263,17 +250,22 @@ def fine_reader(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     string_fine = str(fine)
-
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
-
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results)
 
 
-##### Helper Functions #####
+##### HELPER FUNCTIONS #####
 
 def refine_book_info (editions):
     editions = [{'title': e['title'], 'author' : e['author'], 'location' : e['location'], 'genre' : e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions]
+    return editions
+
+def get_search_results (db, phrase):
+    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
+    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
     return editions
 
 def check_availability (db, editions):
