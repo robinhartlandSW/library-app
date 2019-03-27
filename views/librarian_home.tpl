@@ -3,6 +3,7 @@
         <title>Librarian Home</title>
         % include('stylesheet_link_subtemplate.tpl')
         <script src="/scripts/suggest_readers.js"></script>
+        <script src="/scripts/show_serial_numbers.js"></script>
     </head>
     <body>
         <div id="other-view-link">
