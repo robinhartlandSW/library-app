@@ -17,5 +17,8 @@
 
         <input type="submit" value="{{button_text}}" />
         {{extra_text}}
+        % if edition_ID != 0:
+            <input type="hidden" name="edition_ID" value="{{edition['ID']}}" />
+        % end
     </form>
 </div>

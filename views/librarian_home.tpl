@@ -2,7 +2,9 @@
     <head>
         <title>Librarian Home</title>
         % include('stylesheet_link_subtemplate.tpl')
+        % include('sweetalert_link_subtemplate.tpl')
         <script src="/scripts/suggest_readers.js"></script>
+        <script src="/scripts/show_serial_numbers.js"></script>
     </head>
     <body>
         <div id="other-view-link">
@@ -10,7 +12,7 @@
         </div>
         <h1>LIBRARIAN HOME</h1>
         <div class="container quarter-width">
-            % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", serial_number=0)
+            % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", edition_ID=0)
         </div>
         <div class="big-button quarter-width">
                 <div class="centred-block">
