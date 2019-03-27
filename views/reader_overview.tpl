@@ -92,6 +92,28 @@
                 </form>
                 </div>
             </div>
+        </div> <br/>
+        <div class = "centred-block">
+            <h2>Rented Books</h2> <br/>
+
+            <table style="width:100%" id="search-table">
+                <tr>
+                    <td> Serial Number </td>
+                    <td> Title </td>
+                    <td> Author </td>
+                    <td> Date Due </td>
+                </tr>
+
+                % for i in range(number_results):
+                    %book = book_list[i]
+                    <tr>
+                        <td> {{book[0]}} </td>
+                        <td> {{book[1]}} </td>
+                        <td> {{book[2]}} </td>
+                        <td> {{book[3]}} </td>
+                    </tr>
+                % end
+            </table>
         </div>
     </body>
 </html>
