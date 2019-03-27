@@ -1,13 +1,13 @@
-# Setup
-database_file = 'library-nomad.db'
-from bottle import get, post, install, run, request, route, template, static_file
-from bottle_sqlite import SQLitePlugin
 import json
-
 import datetime
+from bottle import get, post, install, run, request, route, template, static_file, redirect
+from bottle_sqlite import SQLitePlugin
+database_file = 'library-nomad.db'
 install(SQLitePlugin(dbfile=database_file))
 
-# Static content:
+
+##### STATIC #####
+
 @get('/static/<file:path>')
 def serve_static(file):
     return static_file(file, root='./static')
@@ -16,10 +16,43 @@ def serve_static(file):
 def serve_script(file):
     return static_file(file, root = './scripts')
 
-# Routes
 @route('/img/<filename>')
 def fetch_book_cover(filename):
     return static_file(filename, root='./img')
+
+
+##### BORROWER #####
+
+@route('/switch_to_borrower_view')
+def switch_to_borrower_view(db):
+    redirect ('/borrower_search?phrase=')
+
+@get('/borrower_search')
+def search(db):
+    phrase = request.query.phrase
+    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
+    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
+    editions = check_availability(db, editions)
+    return template('borrower_home', editions=editions)
+
+
+##### LIBRARIAN #####
+
+@route('/switch_to_librarian_view')
+def switch_to_librarian_view(db):
+    redirect ('/librarian_search?phrase=')
+
+@get('/librarian_search')
+def librarian_search(db):
+    phrase = request.query.phrase
+    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
+    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
+    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
+    editions = get_num_copies(db, editions)
+    return template('librarian_home', editions=editions)
 
 @get('/add_new_reader')
 def add_new_reader():
@@ -28,19 +61,6 @@ def add_new_reader():
 @get('/return_book')
 def return_book():
     return template('return_book.tpl')
-
-
-@get('/')
-@get('/switch_to_librarian_view')
-def librarian_home():
-    return template('librarian_home')
-
-@get('/switch_to_borrower_view')
-def view_library(db):
-    library = db.execute('SELECT * FROM editions').fetchall()
-    editions = [{'title': e['title'], 'author' : e['author'], 'genre': e['genre'], 'location' : e['location'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in library]
-    editions = check_availability(db, editions)
-    return template('borrower_home', editions=editions)
 
 @post('/find_matching_names')
 def find_matching_names(db):
@@ -176,17 +196,6 @@ def add_new_edition():
 def add_new_copy(db, editionID):
     db.execute("INSERT INTO copies(editionID) VALUES (?)", (editionID,))
 
-@get('/search')
-def search(db):
-    phrase = request.query.phrase
-    matching_titles = db.execute('SELECT * FROM editions WHERE title LIKE (?)', (f'%{phrase}%',)).fetchall()
-    matching_authors = db.execute('SELECT * FROM editions WHERE author LIKE (?)', (f'%{phrase}%',)).fetchall()
-    matching_genres = db.execute('SELECT * FROM editions WHERE genre LIKE (?)', (f'%{phrase}%',)).fetchall()
-    editions = refine_book_info(matching_titles) + refine_book_info(matching_authors) + refine_book_info(matching_genres)
-    editions = get_num_copies(db, editions)
-    return template('book_display.tpl', editions=editions)
-
-
 @post('/available_serial_numbers')
 def available_serial_numbers(db):
     editionID = request.json
@@ -261,7 +270,7 @@ def fine_reader(db):
 ##### Helper Functions #####
 
 def refine_book_info (editions):
-    editions = [{'title': e['title'], 'author' : e['author'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions]
+    editions = [{'title': e['title'], 'author' : e['author'], 'location' : e['location'], 'genre' : e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']} for e in editions]
     return editions
 
 def check_availability (db, editions):

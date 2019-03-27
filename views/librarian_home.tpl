@@ -36,5 +36,38 @@
                 </div>
             </a>
         </div>
-    </body>
-</html>
+
+            <div id="search-box">
+                <div class="search-element-container">
+                    <form action="/librarian_search">
+                        <input type="text" placeholder="Search..." name="phrase">
+                    </form>
+                </div> 
+            </div>
+    
+            % for edition in editions:
+                <div class="block">
+                    <div class="book-cover"><img src="/img/{{edition['ISBN']}}.jpg" onerror="this.src='img/placeholder.jpg';"></div>
+                    <div class="book-info">
+                        <div class="title-text">{{edition['title']}}</div>
+                        <div class="info-text">
+                            {{edition['author']}}<br/>
+                            {{edition['genre']}}<br/>
+                            ISBN: {{edition['ISBN']}}
+                        </div>               
+                        <div id="num-available-copies-button">   
+                            Copies in stock: {{edition['num_available_copies']}}<br>
+                            Location: TODO!!
+                            % if edition['num_available_copies'] > 0:
+                                <button class="search-result-more-info-button"  onclick="show_serial_numbers({{edition['ID']}})"> See serial numbers of available copies > </button>
+                            % else:
+                                <button class="search-result-more-info-button" onclick="window.location.href = '/show_reservation_form/{{edition['ID']}}'"> Reserve a copy > </button>
+                            % end
+                        </div>               
+                    </div>
+                </div>
+            % end
+    
+        </body>
+    
+    </html>

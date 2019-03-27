@@ -11,7 +11,7 @@
         <h1>SEARCH THE LIBRARY</h1>
         <div id="search-box">
             <div class="search-element-container">
-                <form action="/search">
+                <form action="/borrower_search">
                     <input type="text" placeholder="Search..." name="phrase">
                 </form>
             </div> 
