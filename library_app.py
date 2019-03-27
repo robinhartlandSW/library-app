@@ -60,7 +60,11 @@ def reader_overview(db):
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (reader_ID,)).fetchone()[0]
     string_fine = str(fine)
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
-    return template('reader_overview.tpl', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ')
+
+    rented_book_list = get_rented_books(db, reader_ID)
+    number_results = len(rented_book_list)
+
+    return template('reader_overview.tpl', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results)
     
 
         
@@ -105,6 +109,7 @@ def return_book_to_database(db):
     ISBN = request.forms.get('ISBN')
     serial_number = request.forms.get('serial_number')
     reader_id = db.execute('SELECT readerID FROM copies WHERE copyID = ?', (serial_number,)).fetchone()[0]
+    message = ''
 
     is_overdue = is_book_overdue(db, serial_number)
     if is_overdue[0] == True:
@@ -115,10 +120,11 @@ def return_book_to_database(db):
             user_old_fine = user_old_fine[0]
         user_new_fine = user_old_fine + is_overdue[1]
         db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (user_new_fine, reader_id))
+        message = f'BOOK RETURNED LATE. Reader fine now £{user_new_fine}'
 
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
-    return template("book_returned.tpl")
+    return template("book_returned.tpl", message = message)
 
 
 @post('/add_new_edition_to_database')
@@ -205,7 +211,11 @@ def fine_reader(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     string_fine = str(fine)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED')
+
+    rented_book_list = get_rented_books(db, user_id)
+    number_results = len(rented_book_list)
+
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results)
 
 @post('/reader_overview/pay_fine')
 def fine_reader(db):
@@ -220,7 +230,11 @@ def fine_reader(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     string_fine = str(fine)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID')
+
+    rented_book_list = get_rented_books(db, user_id)
+    number_results = len(rented_book_list)
+
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results)
 
 # Helper Functions
 
@@ -261,6 +275,23 @@ def user_has_overdue_book(db, user_id):
         return (False, [])
     else:
         return (True, overdue_books)
+
+def get_rented_books(db, reader_ID):
+    rented_books1 = db.execute('SELECT * FROM copies WHERE readerID = ?', (reader_ID,)).fetchall()
+    rented_books = []
+    for book in rented_books1:
+        rented_books.append(book)
+    number_results = len(rented_books)
+    rented_book_editions = []
+    for book in rented_books:
+        edition = book['editionID']
+        edition_book = db.execute('SELECT * FROM editions WHERE ID = ?', (edition,)).fetchone()
+        rented_book_editions.append(edition_book)
+    rented_book_list = []
+    for i in range(number_results):
+        rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
+    return rented_book_list
     
+
 
 run(host='localhost', port=8080, debug=True)
