@@ -14,7 +14,7 @@
 
         <h1>REGISTER A NEW LIBRARY USER</h1>
         <div class="block">
-            <form class="add-user-form" method="POST" action="/register_new_reader_in_database">
+            <form class="add-user-form" method="POST" id="new_reader_form" action="/register_new_reader_in_database">
                 FIRST NAME: <input type="text" name="first_name" id="first_name"><br>
                 LAST NAME: <input type="text" name="last_name" id="last_name"><br>
                 <input type="submit" value="REGISTER USER">

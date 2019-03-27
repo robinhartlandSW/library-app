@@ -1,13 +1,16 @@
 <html>
+
     <head>
         <title>Reader overview</title>
         % include('stylesheet_link_subtemplate.tpl')
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="scripts/popup.js"></script>
     </head>
+
     <body>
+        
         <div id="other-view-link">
-            <a href="/view_library">Go to book search view</a>
+            <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
         </div>
         <div id="home-link">
             <a href="/home">Home</a>
