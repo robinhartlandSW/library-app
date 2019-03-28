@@ -1,23 +1,14 @@
 function suggest_readers() {
-    
+    let name_input_box = document.getElementById("reader_name_input");
+    let reader_name = name_input_box.value;
 
-    let first_name_input_box = document.getElementById("reader_first_name_input");
-    let first_name = first_name_input_box.value;
-
-    let last_name_input_box = document.getElementById("reader_last_name_input");
-    let last_name = last_name_input_box.value;
-
-    suggested_names = find_matching_names(first_name, last_name);
-
-    
-   
-
+    suggested_names = find_matching_names(reader_name);
 }
 
-function find_matching_names(first_name, last_name) {
+function find_matching_names(reader_name) {
     fetch('/find_matching_names', {
         method: "POST",
-        body: JSON.stringify([first_name, last_name]),
+        body: JSON.stringify(reader_name),
         headers: {
             'Content-Type': 'application/json'
         }
