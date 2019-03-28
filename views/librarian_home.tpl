@@ -58,7 +58,9 @@
                 </div>
             </div><br>
 
-        <h2>SEARCH AND RESERVE BOOKS</h2>
+            
+
+        <h2 id="search_reserve">SEARCH AND RESERVE BOOKS </h2>  
 
             <div id="search-box">
                 <div class="search-element-container">
@@ -66,6 +68,7 @@
                         <input type="text" placeholder="Search..." name="phrase">
                     </form>
                 </div> 
+                
             </div>
     
             % for edition in editions:
@@ -90,7 +93,7 @@
                     </div>
                 </div>
             % end
-    
+            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button"> Show all Books </button></a></p>
         </body>
     
     </html>
