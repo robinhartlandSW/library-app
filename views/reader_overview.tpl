@@ -123,7 +123,5 @@
                 % end
             </table>
         </div>
-
-    <button onclick='popup({{ID}})'> Button </button>
     </body>
 </html>
