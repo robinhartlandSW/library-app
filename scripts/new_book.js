@@ -30,7 +30,7 @@ function check_conditions_isbn() {
 }
 
 function check_conditions_title() {
-    var isbn = document.getElementById("title_1").value;
+    let isbn = document.getElementById("title_1").value;
     if (isbn.length === 0) {
         popup("The form is incomplete! Please add a title.")
         return false
