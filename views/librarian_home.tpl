@@ -6,6 +6,7 @@
         % include('sweetalert_link_subtemplate.tpl')
         <script src="/scripts/suggest_readers.js"></script>
         <script src="/scripts/show_serial_numbers.js"></script>
+        <script src="/scripts/confirm_return.js"></script>
     </head>
 
     <body>
@@ -39,7 +40,7 @@
                     <div class="action-heading">LOG A RETURN</div><br>
                     <div id="input-box">
                         <div class="input-container">
-                            <form action="/return_book_to_database" method="POST">
+                            <form action="/return_book_to_database" method="POST" onsubmit="confirm_return()">
                                 <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
                             </form>
                         </div>
