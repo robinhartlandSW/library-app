@@ -142,12 +142,17 @@ def check_out_book(db):
         
         return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
 
-    db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
-    db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
-    check_for_satisfied_reservations(serial_number, readerID, db)
+    copy_in_library = db.execute("SELECT readerID FROM copies WHERE copyID = ? AND readerID IS NULL", (serial_number,)).fetchone()
+    if copy_in_library and copy_in_library['readerID']:
+        db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
+        db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
+        check_for_satisfied_reservations(serial_number, readerID, db)
+        return template("book_checked_out.tpl")
+    else:
+        return template('message_page.tpl', message="Error", submessage = "That book is not available to be borrowed")
 
-    #TODO: return a suitable error message when trying to check out a disallowed book (maybe use javascript to prevent this?)
-    return template("book_checked_out.tpl")
+
+    
 
 @post('/return_book_to_database')
 def return_book_to_database(db):
