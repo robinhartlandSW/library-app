@@ -108,10 +108,12 @@ def reader_overview(db):
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
     rented_book_list = get_rented_books(db, reader_ID)
     number_results = len(rented_book_list)
+    reserved_books = reserved_book_list(db, reader_ID)
+    number_reservations = len(reserved_books)
 
     overdue_books = number_overdue_books(number_results, rented_book_list)
 
-    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books)
+    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books, number_reservations=number_reservations, reservation_list=reserved_books)
     
 
         
@@ -125,8 +127,6 @@ def check_out_book(db):
     days_rented = int(days_rented)
     current_fine = fine_string_to_decimal(current_fine)
 
-    if current_fine > 0:
-        return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.', submessage = 'Return to the readers page and ensure that all fines are paid and there are no overdue books.')
 
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
@@ -142,8 +142,7 @@ def check_out_book(db):
         
         return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
 
-    copy_in_library = db.execute("SELECT readerID FROM copies WHERE copyID = ? AND readerID IS NULL", (serial_number,)).fetchone()
-    if copy_in_library and copy_in_library['readerID']:
+    if copy_is_in_library(serial_number, db):
         db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
         db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
         check_for_satisfied_reservations(serial_number, readerID, db)
@@ -275,7 +274,10 @@ def fine_reader(db):
     number_results = len(rented_book_list)
     overdue_books = number_overdue_books(number_results, rented_book_list)
 
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=1)
+    reserved_books = reserved_book_list(db, user_id)
+    number_reservations = len(reserved_books)
+
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=1, number_reservations=number_reservations, reservation_list=reserved_books)
 
 @post('/reader_overview_pay_fine')
 def pay_fine(db):
@@ -294,7 +296,11 @@ def pay_fine(db):
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
     overdue_books = number_overdue_books(number_results, rented_book_list)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=-1)
+
+    reserved_books = reserved_book_list(db, user_id)
+    number_reservations = len(reserved_books)
+
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=-1, number_reservations=number_reservations, reservation_list=reserved_books)
 
 
 ##### HELPER FUNCTIONS #####
@@ -372,6 +378,10 @@ def get_rented_books(db, reader_ID):
         rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
     return rented_book_list
 
+def copy_is_in_library(serial_number, db):
+    copies_in_library = db.execute("SELECT copyID FROM copies WHERE copyID = ? AND readerID IS NULL", (serial_number,)).fetchall()
+    return len(copies_in_library)
+
 def number_overdue_books(number_results, rented_book_list):
     import datetime
     overdue_books = 0
@@ -389,6 +399,18 @@ def fine_string_to_decimal(fine_string):
 def check_for_satisfied_reservations(copy_ID, reader_ID, db):
     edition_ID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (copy_ID, )).fetchone()['editionID']
     db.execute("DELETE FROM reservations WHERE reserver_ID = ? AND editionID = ?", (reader_ID, edition_ID))
+
+def reserved_book_list(db, reader_ID):
+    reserved_books1 = db.execute('SELECT * FROM reservations WHERE reserver_ID = ?', (reader_ID,)).fetchall()
+    reserved_books = []
+    for book in reserved_books1:
+        bookbook = db.execute('SELECT * FROM editions WHERE ID = ?', (str(book['editionID']))).fetchone()
+        reserved_books.append(bookbook)
+    number_results = len(reserved_books)
+    reserved_book_list = []
+    for i in range(number_results):
+        reserved_book_list.append([' ', str(reserved_books[i]['title']), str(reserved_books[i]['author']), ' '])
+    return reserved_book_list
     
 
 

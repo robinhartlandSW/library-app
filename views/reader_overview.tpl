@@ -30,16 +30,16 @@
         -->
         
 
-        % num_fine = fine[1:-1]
+        % num_fine = fine[1:]
 
         <div class="checkout-block">
             <div class="action-heading">CHECK OUT A BOOK</div><br>
-            <form id="check_out" action="/check_out_book" method="POST">
-                <input type="hidden" id="readerID" name="readerID" value={{ID}}/>
+            <form id="check_out" onsubmit = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{num_overdue_books}})'  action="/check_out_book" method="POST">
+                <input type="hidden" id="readerID" name="readerID" value={{ID}}>
                 <input type="hidden" id="current_fine" name="current_fine" value={{fine}}>
                 <input type="number" id="checkout-box" name="serial_number" placeholder="Serial No." required/>
-                <input type="days_rented" id="checkout-box" name="days_rented" placeholder="Loan Length (Days)"/>
-                <input type="submit" value="CHECK OUT" onclick='return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{num_overdue_books}})'/>
+                <input type="days_rented" id="checkout-box" name="days_rented" placeholder="Loan Length (Days)" required/>
+                <input type="submit" value="CHECK OUT">
             </form>
         </div>
 
@@ -85,6 +85,28 @@
 
                 % for i in range(number_results):
                     %book = book_list[i]
+                    <tr>
+                        <td> {{book[0]}} </td>
+                        <td> {{book[1]}} </td>
+                        <td> {{book[2]}} </td>
+                        <td> {{book[3]}} </td>
+                    </tr>
+                % end
+            </table>
+        </div>
+
+        <div class="block">
+            <div class="action-heading">RESERVED BOOKS</div><br>
+            <table style="width:100%" id="search-table">
+                <tr>
+                    <td>  </td>
+                    <td> Title </td>
+                    <td> Author </td>
+                    <td>  </td>
+                </tr>
+
+                % for i in range(number_reservations):
+                    %book = reservation_list[i]
                     <tr>
                         <td> {{book[0]}} </td>
                         <td> {{book[1]}} </td>
