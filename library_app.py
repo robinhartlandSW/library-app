@@ -101,9 +101,9 @@ def check_out_book(db):
     author = request.forms.get('author')
     serial_number = request.forms.get('serial_number')
     days_rented = request.forms.get('days_rented')
-    current_fine = request.forms.get('current_fine')[-3:-1]
+    current_fine = request.forms.get('current_fine')
     days_rented = int(days_rented)
-    current_fine = Decimal(current_fine)
+    current_fine = fine_string_to_decimal(current_fine)
 
     if current_fine > 0:
         return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.', submessage = 'Return to the readers page and ensure that all fines are paid and there are no overdue books.')
@@ -351,6 +351,9 @@ def number_overdue_books(number_results, rented_book_list):
         if due_date_time < now:
             overdue_books += 1
     return overdue_books
+
+def fine_string_to_decimal(fine_string):
+    return Decimal(fine_string.split('£')[-1])
     
 
 
