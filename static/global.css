@@ -116,7 +116,7 @@ h1, h2 {
     padding: 30px;
 }
 
-#checkout-box {
+.checkout-box {
     padding: 10px;
     float: none;
     width: 40%;

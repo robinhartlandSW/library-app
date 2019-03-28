@@ -65,7 +65,7 @@ def return_book():
 @post('/get_edition_details')
 def get_edition_details(db):
     serial_number = request.json
-    editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
+    editionID = serial_number_to_edition_ID(serial_number)
     edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
     return json.dumps(refine_book_info(edition[0]))
 
@@ -115,8 +115,17 @@ def reader_overview(db):
 
     return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books, number_reservations=number_reservations, reservation_list=reserved_books)
     
+@post('/check_if_copy_reserved')
+def check_if_copy_reserved(db):
+    (serial_number, readerID) = request.json
+    editionID = serial_number_to_edition_ID(serial_number, db)
 
-        
+    num_reservations_for_that_edition = db.execute("SELECT COUNT(ID) FROM reservations WHERE editionID = ?", (editionID, )).fetchone()[0]
+    available_copies_of_that_edition = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID IS NULL AND editionID = ?", (editionID, )).fetchone()[0]
+
+    return JSON.stringify(num_reservations_for_that_edition >= available_copies_of_that_edition)
+
+
 @post('/check_out_book')
 def check_out_book(db): 
     title = request.forms.get('title')
@@ -411,6 +420,10 @@ def reserved_book_list(db, reader_ID):
     for i in range(number_results):
         reserved_book_list.append([' ', str(reserved_books[i]['title']), str(reserved_books[i]['author']), ' '])
     return reserved_book_list
+
+def serial_number_to_edition_ID(serial_number, db):
+    editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
+    return editionID
     
 
 
