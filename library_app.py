@@ -1,10 +1,13 @@
 import json
 import datetime
+from decimal import Decimal, getcontext
 from bottle import get, post, install, run, request, route, template, static_file, redirect
 from bottle_sqlite import SQLitePlugin
 database_file = 'library-nomad.db'
 install(SQLitePlugin(dbfile=database_file))
 
+# Make all fine calculations use 2 decimal places
+getcontext().prec = 2
 
 ##### STATIC #####
 
@@ -101,7 +104,7 @@ def check_out_book(db):
     days_rented = request.forms.get('days_rented')
     current_fine = request.forms.get('current_fine')[-3:-1]
     days_rented = int(days_rented)
-    current_fine = float(current_fine)
+    current_fine = Decimal(current_fine)
 
     if current_fine > 0:
         return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.', submessage = 'Return to the readers page and ensure that all fines are paid and there are no overdue books.')
@@ -227,10 +230,10 @@ def show_reservation_form(serial_number, db):
 @post('/reader_overview/fine')
 def fine_reader(db):
     fine = request.forms.get('added_fine')
-    fine = float(fine)
+    fine = Decimal(fine)
     user_id = request.forms.get('user_id')
     current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
-    current_fine = float(current_fine)
+    current_fine = Decimal(current_fine)
     new_fine = current_fine + fine
     db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
@@ -245,14 +248,15 @@ def fine_reader(db):
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books)
 
 @post('/reader_overview/pay_fine')
-def fine_reader(db):
+def pay_fine(db):
     fine = request.forms.get('paid_fine')
-    fine = float(fine)
+    fine = Decimal(fine)
     user_id = request.forms.get('user_id')
     current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
-    current_fine = float(current_fine)
-    new_fine = current_fine - fine
-    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))
+    current_fine = Decimal(current_fine)
+
+    new_fine = Decimal(current_fine - fine)
+    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (str(new_fine), user_id))
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
