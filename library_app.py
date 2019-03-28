@@ -155,7 +155,7 @@ def add_new_edition(db):
     if check_existence == None:
         edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
         #TODO: display user added confirmation
-        document.getElementById("new_reader_form").reset()
+        return template('new_book', success = 1)
     #TODO: else error message book already exists
 
 @post('/add_new_copy_by_ISBN')
