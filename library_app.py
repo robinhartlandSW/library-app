@@ -6,8 +6,7 @@ from bottle_sqlite import SQLitePlugin
 database_file = 'library-nomad.db'
 install(SQLitePlugin(dbfile=database_file))
 
-# Make all fine calculations use 2 decimal places
-getcontext().prec = 2
+TWO_DECIMAL_PLACES = Decimal(10) ** -2
 
 ##### STATIC #####
 
@@ -234,8 +233,8 @@ def fine_reader(db):
     user_id = request.forms.get('user_id')
     current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     current_fine = Decimal(current_fine)
-    new_fine = current_fine + fine
-    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))
+    new_fine = Decimal(current_fine + fine).quantize(TWO_DECIMAL_PLACES)
+    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (str(new_fine), user_id))
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
@@ -255,7 +254,7 @@ def pay_fine(db):
     current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     current_fine = Decimal(current_fine)
 
-    new_fine = Decimal(current_fine - fine)
+    new_fine = Decimal(current_fine - fine).quantize(TWO_DECIMAL_PLACES)
     db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (str(new_fine), user_id))
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
