@@ -3,7 +3,7 @@
         <label>FIND A READER:</label>
         <div>
             <label for="reader_name_input">Reader name:</label>
-            <input type="text" id="reader_name_input" onkeydown="suggest_readers()" autocomplete="off"/>
+            <input type="text" id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
         </div>
 
         <select id="reader_name_dropdown" name="reader_name_input">

@@ -71,7 +71,7 @@ def find_matching_names(db):
     # Extract all names that have more than zero non-whitespace characters
     name_list = [n for n in names if len(n.strip()) > 0 ]
     num_names = len(name_list)
-    parsed_matches = [{'first_name' : "type a name...", 'last_name' : "", 'ID' : ""}]
+    parsed_matches = []
 
     if num_names > 0:
         first_name = name_list[0]
