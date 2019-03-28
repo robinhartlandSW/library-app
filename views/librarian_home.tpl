@@ -50,7 +50,7 @@
             <div class="column">
                 <div class="home-block">
                     <div class="action-heading">USER ACCOUNTS</div>                       
-                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", edition_ID=0)
+                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', edition_ID=0)
                     </div>
                 </div>
             </div><br>

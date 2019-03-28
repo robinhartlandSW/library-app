@@ -168,11 +168,11 @@ def add_new_edition(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
     genre = request.forms.get('genre')
+    location = request.forms.get('location')
     ISBN = request.forms.get('ISBN')
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
-        edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
-        #TODO: display user added confirmation
+        edition_id = db.execute("INSERT INTO editions(author, title, genre, location, ISBN) VALUES (?,?,?,?,?)", (author, title, genre, location, ISBN)).lastrowid
         return template('new_book', success = 1)
     else:
         return template('new_book', success = -3)

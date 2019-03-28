@@ -1,7 +1,7 @@
 <html>
 
     <head>
-        <title>Add a new book</title>
+        <title>Add To The Library</title>
         
         % include('stylesheet_link_subtemplate.tpl')
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -33,6 +33,7 @@
                 TITLE: <input type="text" name="title" id="title"><br>
                 AUTHOR: <input type="text" name="author" id="author"><br>
                 GENRE: <input type="text" name="genre" id="genre"><br>
+                LOCATION: <input type="text" name="location" id="location"><br>
                 ISBN: <input type="text" name="ISBN" id="ISBN"><br>
                 <input type="submit" value ="ADD BOOK" onclick='return check_conditions()'>
             </form>
@@ -43,7 +44,8 @@
             <form action="/add_new_copy_by_title_author" method="POST"><br>
                 TITLE: <input type="text" name="title" id="title_1"><br>
                 AUTHOR: <input type="text" name="author" id="author"><br>
-                <input type="submit" value ="ADD COPY" onclick='return check_conditions_title()'><br><br><br>
+                <input type="submit" value ="ADD COPY" onclick='return check_conditions_title()'>
+                <br><br><br><br><br><br><br><br>
             </form>
             <form action="/add_new_copy_by_ISBN" method="POST">
                 ISBN: <input type="text" name="ISBN" id="ISBN_1"><br>
