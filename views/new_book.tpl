@@ -23,7 +23,7 @@
         <div id="other-view-link">
             <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
         </div>
-        <div id="home-link"><a href="/home">Home</a></div>
+        <div id="home-link"><a href="/home">HOME</a></div>
         <h1>ADD TO THE LIBRARY</h1>
         
         <div class="side-by-side">

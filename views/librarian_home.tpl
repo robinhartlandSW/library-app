@@ -37,8 +37,8 @@
             <div class="column">
                 <div class="home-block">
                     <div class="action-heading">LOG A RETURN</div><br>
-                    <div id="serial-box">
-                        <div class="serial-no-container">
+                    <div id="input-box">
+                        <div class="input-container">
                             <form action="/return_book_to_database" method="POST">
                                 <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
                             </form>
@@ -57,7 +57,7 @@
                 </div>
             </div><br>
 
-        <h2>CHECK OUT AND RESERVE BOOKS</h2>
+        <h2>SEARCH AND RESERVE BOOKS</h2>
 
             <div id="search-box">
                 <div class="search-element-container">

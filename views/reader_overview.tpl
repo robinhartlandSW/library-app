@@ -1,26 +1,21 @@
 <html>
 
     <head>
-        <title>Reader overview</title>
+        <title>Account | {{reader_name}}</title>
         % include('stylesheet_link_subtemplate.tpl')
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="scripts/popup.js"></script>
     </head>
 
     <body>
-        
-        <div id="other-view-link">
-            <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
-        </div>
+        <div id="other-view-link"><a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
         <div id="home-link">
-            <a href="/home">Home</a>
+            <a href="/home">HOME</a>
         </div>
-        <h1>
-            Registered reader overview <br/>
-            {{page_head_message}}
-        </h1>
+        <h1>{{reader_name}}</h1>
+        <h2>{{page_head_message}}</h2>
+
         <div id="reader-info">
-            <h2>{{reader_name}}</h2>
             ID: {{ID}} <br />
             Books borrowed: {{num_books_borrowed}} of 8
             <br />
@@ -29,10 +24,10 @@
 
         % num_fine = fine[1:-1]
 
+        <!-- TODO: move this check-out section to librarian book search
+
         <div class="block">
             <form  id = "check_out" action="/check_out_book" method="post">
-                
-                <!-- hidden field to store user's ID -->
                 <input type="hidden" id="readerID" name="readerID" value = {{ID}} />
 
                 <h2> Check out a book </h2>
@@ -72,38 +67,43 @@
                         </div>
                     </div>
                 </div>
-
-
                 <input type="submit" value="Check out" onclick = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{num_overdue_books}})' />
-
-
             </form>
         </div>
-        <div class="container half-width">
-            <div class="block user-input-area">
-                <h2> Add charges/fines </h2>
-                <form action ="/reader_overview/fine" method="post">
-                    <input type="hidden" name="user_id" value={{ID}}>
-                    Amount (£): <input type="text" name="added_fine"><br>
-                    <input type="submit" value="Submit">
-                </form>
-            </div>
-        </div>
-        <div class="container half-width">
-            <div class="block">
-                <div class = "user-input-area">
-                    <h2> Record payment </h2>
-                    <form action ="/reader_overview/pay_fine" method="post">
-                        <input type="hidden" name="user_id" value={{ID}}>
-                        Amount (£): <input type="text" name="paid_fine"><br>
-                    <input type="submit" value="Submit">
-                </form>
+    -->
+
+        <div class="row">
+            <div class="column">
+                <div class="home-block">
+                    <div class="action-heading">ADD FINES AND CHARGES</div><br>
+                    <div id="input-box">
+                        <div class="input-container">
+                            <form action="/reader_overview/fine" method="POST">
+                                <input type="hidden" name="user_id" value={{ID}}>
+                                <input type="text" name="added_fine" placeholder="Amount (£)">
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div> <br/>
-        <div class = "centred-block">
-            <h2>Rented Books</h2> <br/>
 
+            <div class="column">
+                <div class="home-block">
+                    <div class="action-heading">RECORD A PAYMENT</div><br>
+                    <div id="input-box">
+                        <div class="input-container">
+                            <form action="/reader_overview/pay_fine" method="POST">
+                                <input type="hidden" name="user_id" value={{ID}}>
+                                <input type="text" name="paid_fine" placeholder="Amount (£)">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="action-heading">BOOKS CURRENTLY ON LOAN</div><br>
             <table style="width:100%" id="search-table">
                 <tr>
                     <td> Serial Number </td>
