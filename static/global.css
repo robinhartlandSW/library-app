@@ -9,7 +9,7 @@ body {
 
 #home-link, #other-view-link {
     margin: 20px 20px;
-    margin-bottom: 0;
+    margin-bottom: 10px;;
 }
 
 #other-view-link {
@@ -93,9 +93,13 @@ h1, h2 {
     width: 10%;
 }
 
-.block, .centred-block {
+.block, .checkout-block, .centred-block {
     margin: 15px;
     background-color: #ededed;
+}
+
+.checkout-block {
+    height: 150px;;
 }
 
 
@@ -108,8 +112,17 @@ h1, h2 {
     border-style: outset;
 }
 
-.block, #search-box {
+.block, .checkout-block, #search-box {
     padding: 30px;
+}
+
+#checkout-box {
+    padding: 10px;
+    float: none;
+    width: 40%;
+    border: 1px solid #ccc;
+    margin: 5px;
+    font-size: 16px;
 }
 
 .user-input-area {
@@ -223,6 +236,20 @@ form {
 	text-decoration: none;
 	font-size: 14px;
 	margin: 4px 2px;
+	cursor: pointer;
+	border: 1px solid  #424242;
+	float: right;
+}
+
+.checkout-block input[type="submit"] {
+    background-color: whitesmoke;
+	border: none;
+	color: #424242;
+	padding: 12px 44px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	margin: 4px 0px;
 	cursor: pointer;
 	border: 1px solid  #424242;
 	float: right;

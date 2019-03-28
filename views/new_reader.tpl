@@ -1,7 +1,7 @@
 <html>
 
     <head>
-        <title>Register User</title>
+        <title>Register New User</title>
         % include('stylesheet_link_subtemplate.tpl')
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="scripts/new_book.js"></script>
@@ -18,9 +18,7 @@
         success_message_user({{success}})
         </script>
 
-        <div id="other-view-link">
-            <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
-        </div>
+        <div id="other-view-link"><a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
         <div id="home-link"><a href="/home">HOME</a></div>
 
         <h1>REGISTER A NEW LIBRARY USER</h1>
