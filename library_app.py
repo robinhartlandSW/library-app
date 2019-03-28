@@ -124,6 +124,7 @@ def check_out_book(db):
 
     db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
     db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
+    check_for_satisfied_reservations(serial_number, readerID, db)
 
     #TODO: return a suitable error message when trying to check out a disallowed book (maybe use javascript to prevent this?)
     return template("book_checked_out.tpl")
@@ -145,6 +146,8 @@ def return_book_to_database(db):
         message = f'BOOK RETURNED LATE. Reader fine now £{user_new_fine}'
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
+
+    
     return template("book_returned.tpl", message = message)
 
 @post('/add_new_edition')
@@ -354,6 +357,10 @@ def number_overdue_books(number_results, rented_book_list):
 
 def fine_string_to_decimal(fine_string):
     return Decimal(fine_string.split('£')[-1])
+
+def check_for_satisfied_reservations(copy_ID, reader_ID, db):
+    edition_ID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (copy_ID, )).fetchone()['editionID']
+    db.execute("DELETE FROM reservations WHERE reserver_ID = ? AND editionID = ?", (reader_ID, edition_ID))
     
 
 
