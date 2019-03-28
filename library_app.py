@@ -62,6 +62,13 @@ def add_new_reader():
 def return_book():
     return template('return_book')
 
+@post('/get_edition_details')
+def get_edition_details(db):
+    serial_number = request.json
+    editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
+    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone())
+    return json.dumps(refine_book_info(edition[0]))
+
 @post('/find_matching_names')
 def find_matching_names(db):
     # Parse the JSON of the HTTP request
