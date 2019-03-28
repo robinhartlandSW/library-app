@@ -8,7 +8,6 @@
     </head>
 
     <body>
-<<<<<<< HEAD
         % try:
             % fine_added
         %except NameError:
@@ -21,21 +20,14 @@
         <div id="other-view-link">
             <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
         </div>
-=======
-        <div id="other-view-link"><a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
->>>>>>> 39411e014fa001abcc5ae9810d53f1a3486b5f52
         <div id="home-link">
             <a href="/home">HOME</a>
         </div>
-<<<<<<< HEAD
         <h1>
             Registered reader overview <br/>
         </h1>
-=======
         <h1>{{reader_name}}</h1>
-        <h2>{{page_head_message}}</h2>
 
->>>>>>> 39411e014fa001abcc5ae9810d53f1a3486b5f52
         <div id="reader-info">
             ID: {{ID}} <br />
             Books borrowed: {{num_books_borrowed}} of 8
@@ -45,7 +37,7 @@
 
         % num_fine = fine[1:-1]
 
-        <!-- TODO: move this check-out section to librarian book search
+        <!-- TODO: move this check-out section to librarian book search -->
 
         <div class="block">
             <form  id = "check_out" action="/check_out_book" method="post">
@@ -91,28 +83,9 @@
                 <input type="submit" value="Check out" onclick = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{num_overdue_books}})' />
             </form>
         </div>
-<<<<<<< HEAD
-        <div class="container half-width">
-            <div class="block user-input-area">
-                <h2> Add charges/fines </h2>
-                <form action ="/reader_overview_fine" method="post">
-                    <input type="hidden" name="user_id" value={{ID}}>
-                    Amount (£): <input type="text" name="added_fine" id="added_fine"><br>
-                    <input type="submit" value="Submit" onclick='return verify_fine_add()'>
-                </form>
-            </div>
-        </div>
-        <div class="container half-width">
-            <div class="block">
-                <div class = "user-input-area">
-                    <h2> Record payment </h2>
-                    <form action ="/reader_overview_pay_fine" method="post">
-                        <input type="hidden" name="user_id" value={{ID}}>
-                        Amount (£): <input type="text" name="paid_fine" id="paid_fine"><br>
-                    <input type="submit" value="Submit" onclick='return verify_fine_payment()'>
-                </form>
-=======
-    -->
+
+    
+    
 
         <div class="row">
             <div class="column">
@@ -120,9 +93,9 @@
                     <div class="action-heading">ADD FINES AND CHARGES</div><br>
                     <div id="input-box">
                         <div class="input-container">
-                            <form action="/reader_overview/fine" method="POST">
+                            <form action="/reader_overview_fine" method="POST" onsubmit='return verify_fine_add()'>
                                 <input type="hidden" name="user_id" value={{ID}}>
-                                <input type="text" name="added_fine" placeholder="Amount (£)">
+                                <input type="text" name="added_fine" placeholder="Amount (£)" id="added_fine">
                             </form>
                         </div>
                     </div>
@@ -134,13 +107,12 @@
                     <div class="action-heading">RECORD A PAYMENT</div><br>
                     <div id="input-box">
                         <div class="input-container">
-                            <form action="/reader_overview/pay_fine" method="POST">
+                            <form action="/reader_overview_pay_fine" method="POST" onsubmit ='return verify_fine_payment()'>
                                 <input type="hidden" name="user_id" value={{ID}}>
-                                <input type="text" name="paid_fine" placeholder="Amount (£)">
+                                <input type="text" name="paid_fine" placeholder="Amount (£)" id="paid_fine">
                             </form>
                         </div>
                     </div>
->>>>>>> 39411e014fa001abcc5ae9810d53f1a3486b5f52
                 </div>
             </div>
         </div>
