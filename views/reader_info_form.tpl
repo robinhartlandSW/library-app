@@ -1,4 +1,4 @@
-<div class="centred-block">
+
     <form class="librarian-form" method="post" action={{action}}>
         <label>FIND A READER:</label>
         <div>
@@ -21,4 +21,3 @@
             <input type="hidden" name="edition_ID" value="{{edition['ID']}}" />
         % end
     </form>
-</div>

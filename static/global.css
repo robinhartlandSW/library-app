@@ -11,6 +11,7 @@ body {
     text-align: right;
     float: right;
     margin: 20px 20px;
+    margin-bottom: 0;
 }
 
 #home-link {
@@ -25,7 +26,7 @@ h1, h2 {
 
 .search-element-container {
     text-align: left;
-    width: 45%;
+    width: 75%;
     margin: 8px;
     box-sizing: border-box;
 }
@@ -40,23 +41,26 @@ h1, h2 {
     font-size: 16px;
 }
 
-.button-container {
+#serial-box {
     display: flex;
     justify-content: space-evenly;
 }
 
-.container, .big-button{
-    float: left;
-    text-align: center;
+.serial-no-container {
+    text-align: left;
+    width: 75%;
+    margin: 8px;
+    box-sizing: border-box;
 }
 
-.big-button {
-    color: black;
-    font-weight: bold;
-}
-
-.quarter-width {
-    width: 25%;
+.serial-no-container input[type=number] {
+    padding: 10px;
+    float: none;
+    display:block;
+    width:100%;
+    border: 1px solid #ccc;
+    margin: 0px;
+    font-size: 16px;
 }
 
 .half-width {
@@ -194,10 +198,6 @@ form {
 .search-result-more-info-button {
     float: right;
     text-align: right;
-<<<<<<< HEAD
-
-=======
->>>>>>> 76a6278eb3c2aa16be574a1dc6ab583fb55df9f4
 }
 
 .add-form input[type="text"], .add-user-form input[type="text"] {
@@ -243,23 +243,63 @@ form {
 .add-user-form{
     width: calc(100% - 60px);
     padding: 20px;
-    margin: 40px;
+    margin: 20px;
     background-color: #ededed;
 }
 
-.serial-no-container {
-    text-align: left;
-    width: 80%;
-    margin: 8px;
-    box-sizing: border-box;
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 4px;
 }
 
-.serial-no-container input[type=text] {
-    padding: 10px;
-    float: none;
-    display:block;
-    width:100%;
+.column {
+    flex: 50%;
+    max-width: 50%;
+    padding: 0 4px;
+}
+
+.column .home-block {
+    margin: 10px 10px;
+    padding: 20px;
+    width: calc(100% - 15px);
+    height: 160px;
+    background-color:#ededed;
+    vertical-align: middle;
+}
+
+a {
+    text-decoration: none;
+}
+
+#big-button {
+    margin: 10px 10px;
+    padding: 19px;
+    width: calc(100% - 15px);
+    height: 60px;
+    background-color:#ededed;
+    vertical-align: middle;
     border: 1px solid #ccc;
-    margin: 0px;
+}
+
+@media screen and (max-width: 1050px) {
+    .column {
+        max-width: 50%;
+        flex: 50%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .column {
+        flex: 100%;
+        max-width: 100%;
+    }
+}
+
+.action-heading {
+    text-align: center;
     font-size: 16px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: black;
 }
