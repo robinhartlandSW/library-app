@@ -193,7 +193,7 @@ def register_new_reader_in_database(db):
     last_name = request.forms.get('last_name')
     fine = 0
     db.execute("INSERT INTO readers(firstName, lastName, fine) VALUES (?, ?, ?)", (first_name, last_name, fine))
-    return template('new_reader')
+    return template('new_reader', success=1)
 
 @get('/add_new_edition')
 def add_new_edition():

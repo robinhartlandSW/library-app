@@ -55,3 +55,22 @@ function success_message(x) {
         popup("Failed - this edition already exists!")
     }
 }
+
+function check_conditions_name() {
+    let first_name = document.getElementById("first_name").value;
+    let last_name = document.getElementById("last_name").value;
+    if (first_name.length === 0 || last_name.length === 0) {
+        popup("Failed - the form is incomplete!")
+        return false
+    }
+    else {
+        return true
+    }
+}
+
+function success_message_user(x) {
+    let y = parseInt(x)
+    if (y === 1) {
+        popup("Success! User has been added.")
+    }
+}
