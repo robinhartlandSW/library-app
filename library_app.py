@@ -174,28 +174,31 @@ def add_new_edition(db):
         edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
         #TODO: display user added confirmation
         return template('new_book', success = 1)
-    #TODO: else error message book already exists
+    else:
+        return template('new_book', success = -3)
 
 @post('/add_new_copy_by_ISBN')
 def add_new_copy(db):
     ISBN = request.forms.get('ISBN')
     book_edition = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
-    book_id = book_edition['ID']
     if book_edition != None:
+        book_id = book_edition['ID']
         copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
         return template('new_book', success = 1)
-    #TODO: else error message book does not exist
+    else:
+        return template('new_book', success = -1)
 
 @post('/add_new_copy_by_title_author')
 def add_new_copy(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
-    book_edition = db.execute("SELECT * FROM editions WHERE title = (?) AND author = author", [title]).fetchone()
-    book_id = book_edition['ID']
+    book_edition = db.execute("SELECT * FROM editions WHERE title = (?) AND author = (?)", [title, author]).fetchone()
     if book_edition != None:
+        book_id = book_edition['ID']
         copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
         return template('new_book', success=1)
-    #TODO: else error message book does not exist
+    else:
+        return template('new_book', success=-2)
 
 @post('/register_new_reader_in_database')
 def register_new_reader_in_database(db):
@@ -203,7 +206,7 @@ def register_new_reader_in_database(db):
     last_name = request.forms.get('last_name')
     fine = 0
     db.execute("INSERT INTO readers(firstName, lastName, fine) VALUES (?, ?, ?)", (first_name, last_name, fine))
-    return template('new_reader')
+    return template('new_reader', success=1)
 
 @get('/add_new_edition')
 def add_new_edition():
