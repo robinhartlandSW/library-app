@@ -7,6 +7,8 @@
         <script src="/scripts/suggest_readers.js"></script>
         <script src="/scripts/show_serial_numbers.js"></script>
         <script src="/scripts/confirm_return.js"></script>
+        <script src="scripts/empty_search.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
 
     <body>
@@ -41,7 +43,7 @@
                     <div id="input-box">
                         <div class="input-container">
                             <form action="/return_book_to_database" method="POST" onsubmit="confirm_return()">
-                                <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
+                                <input type="number" placeholder="Serial No." name="serial_number" id="serial_number" required/>
                             </form>
                         </div>
                     </div>

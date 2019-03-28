@@ -1,5 +1,5 @@
 
-    <form class="librarian-form" method="post" action={{action}}>
+    <form class="librarian-form" method="post" action={{action}} onsubmit='return empty_search()'>
         <div>
             <input type="text" id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
         </div>
