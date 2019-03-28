@@ -41,7 +41,8 @@ function check_conditions_title() {
 }
 
 function success_message(x) {
-    if (x === 1) {
+    let y = parseInt(x)
+    if (y === 1) {
         popup("Book has been added.")
     }
 }

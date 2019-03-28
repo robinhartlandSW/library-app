@@ -167,7 +167,7 @@ def add_new_copy(db):
     book_id = book_edition['ID']
     if book_edition != None:
         copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
-        return template('new_copy_added', serial_number=copy_id)
+        return template('new_book', success = 1)
     #TODO: else error message book does not exist
 
 @post('/add_new_copy_by_title_author')
@@ -178,7 +178,7 @@ def add_new_copy(db):
     book_id = book_edition['ID']
     if book_edition != None:
         copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
-        return template('new_copy_added', serial_number=copy_id)
+        return template('new_book', success=1)
     #TODO: else error message book does not exist
 
 @post('/register_new_reader_in_database')

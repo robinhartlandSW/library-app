@@ -9,13 +9,13 @@
     </head>
 
     <body>
-    %try:
-        %success
+    % try:
+        % success
     %except NameError:
-        %success=0
-    %end
+        % success=0
+    % end
     <script>
-    success_message(success)
+    success_message({{success}})
     </script>
 
 
