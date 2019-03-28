@@ -1,4 +1,5 @@
 <html>
+
     <head>
         <title>Librarian Home</title>
         % include('stylesheet_link_subtemplate.tpl')
@@ -6,38 +7,56 @@
         <script src="/scripts/suggest_readers.js"></script>
         <script src="/scripts/show_serial_numbers.js"></script>
     </head>
+
     <body>
         <div id="other-view-link">
-            <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
+            <a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
         </div>
+
         <h1>LIBRARIAN HOME</h1>
-        <div class="container quarter-width">
-            % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", edition_ID=0)
+
+        <div class="row">
+            <div class="column">
+                <a href="/add_new_edition">
+                    <div class="home-block" id="big-button">
+                        <div class="action-heading">ADD TO THE LIBRARY</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="column">
+                <a href="/add_new_reader">
+                    <div class="home-block" id="big-button">
+                        <div class="action-heading">ONBOARD A USER</div>
+                    </div>
+                </a>
+            </div>
         </div>
-        <div class="big-button quarter-width">
-                <div class="centred-block">
-                    <h2>RETURN A BOOK</h2><br/><br/><br/><br>
-                    <div class="serial-no-container">
-                        <form action="/return_book_to_database" method="POST">
-                            <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
-                        </form>
+        
+        <div class="row">
+                <div class="column">
+                    <div class="home-block">
+                        <div class="action-heading">LOG A RETURN</div>
+                        <div id="serial-box">
+                        <div class="serial-no-container">
+                                <form action="/return_book_to_database" method="POST">
+                                    <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
+                                </form>
+                        </div>
+                    </div>
                     </div>
                 </div>
-        </div>
-        <div class="big-button quarter-width">
-            <a href="/add_new_edition">
-                <div class="centred-block">
-                    ADD BOOKS AND COPIES
+                <div class="column">
+                    <div class="home-block">
+                        <div class="action-heading">USER ACCOUNTS</div>
+                        <!--
+                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", edition_ID=0)
+                        -->
+                    </div>
                 </div>
-            </a>
-        </div>
-        <div class="big-button quarter-width">
-            <a href="/add_new_reader">
-                <div class="centred-block">
-                    ADD A READER
-                </div>
-            </a>
-        </div>
+        </div><br>
+
+        <h2>CHECK OUT AND RESERVE BOOKS</h2>
 
             <div id="search-box">
                 <div class="search-element-container">
