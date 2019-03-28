@@ -7,11 +7,14 @@ body {
     background-color: beige;
 }
 
+#home-link, #other-view-link {
+    margin: 20px 20px;
+    margin-bottom: 0;
+}
+
 #other-view-link {
     text-align: right;
     float: right;
-    margin: 20px 20px;
-    margin-bottom: 0;
 }
 
 #home-link {
@@ -41,19 +44,19 @@ h1, h2 {
     font-size: 16px;
 }
 
-#serial-box {
+#input-box {
     display: flex;
     justify-content: space-evenly;
 }
 
-.serial-no-container {
+.input-container {
     text-align: left;
     width: 75%;
     margin: 8px;
     box-sizing: border-box;
 }
 
-.serial-no-container input[type=number] {
+.input-container input[type=number], .input-container input[type=text] {
     padding: 10px;
     float: none;
     display:block;
@@ -91,7 +94,7 @@ h1, h2 {
 }
 
 .block, .centred-block {
-    margin: 30px;
+    margin: 15px;
     background-color: #ededed;
 }
 
@@ -138,7 +141,7 @@ form {
 
 #search-box{
     background-color: #ededed;
-    margin: 30px;
+    margin: 15px;
     display: flex;
     justify-content: space-evenly;
 }
@@ -235,7 +238,7 @@ form {
     overflow: hidden;
     padding: 20px;
     margin: 30px;
-    height: 520px;
+    height: 610px;
     background-color: #ededed;
     border: 1px solid  #424242;
 }

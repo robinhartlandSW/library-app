@@ -65,12 +65,25 @@ def return_book():
 @post('/find_matching_names')
 def find_matching_names(db):
     # Parse the JSON of the HTTP request
-    names = request.json
+    reader_name = request.json
+    names = reader_name.split(' ')
 
-    # find all the readers whose first name starts with what has been typed
-    matches = db.execute("SELECT * FROM readers WHERE firstName LIKE ? ", (names[0] + '%',)).fetchall()
+    # Extract all names that have more than zero non-whitespace characters
+    name_list = [n for n in names if len(n.strip()) > 0 ]
+    num_names = len(name_list)
+    parsed_matches = []
 
-    parsed_matches = [{'first_name': m['firstName'], 'last_name': m['lastName'], 'ID': m['ID']} for m in matches]
+    if num_names > 0:
+        first_name = name_list[0]
+        
+        if num_names == 1:
+            # find all the readers whose first name starts with what has been typed
+            matches = db.execute("SELECT * FROM readers WHERE firstName LIKE ? ", (first_name + '%',)).fetchall()
+        else:
+            last_name = name_list[-1]
+            matches = db.execute("SELECT * FROM readers WHERE firstName = ? AND lastName LIKE ?", (first_name, last_name + '%')).fetchall()
+
+        parsed_matches = [{'first_name': m['firstName'], 'last_name': m['lastName'], 'ID': m['ID']} for m in matches]
 
     # convert response to JSON
     return json.dumps(parsed_matches)
@@ -155,11 +168,11 @@ def add_new_edition(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
     genre = request.forms.get('genre')
+    location = request.forms.get('location')
     ISBN = request.forms.get('ISBN')
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
-        edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
-        #TODO: display user added confirmation
+        edition_id = db.execute("INSERT INTO editions(author, title, genre, location, ISBN) VALUES (?,?,?,?,?)", (author, title, genre, location, ISBN)).lastrowid
         return template('new_book', success = 1)
     else:
         return template('new_book', success = -3)
