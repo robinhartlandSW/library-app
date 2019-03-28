@@ -142,8 +142,7 @@ def check_out_book(db):
         
         return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
 
-    copy_in_library = db.execute("SELECT readerID FROM copies WHERE copyID = ? AND readerID IS NULL", (serial_number,)).fetchone()
-    if copy_in_library and copy_in_library['readerID']:
+    if copy_is_in_library(serial_number, db):
         db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
         db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
         check_for_satisfied_reservations(serial_number, readerID, db)
@@ -378,6 +377,10 @@ def get_rented_books(db, reader_ID):
     for i in range(number_results):
         rented_book_list.append([str(rented_books[i]['copyID']), str(rented_book_editions[i]['title']), str(rented_book_editions[i]['author']), str(rented_books[i]['due_date'])[0:19]])
     return rented_book_list
+
+def copy_is_in_library(serial_number, db):
+    copies_in_library = db.execute("SELECT copyID FROM copies WHERE copyID = ? AND readerID IS NULL", (serial_number,)).fetchall()
+    return len(copies_in_library)
 
 def number_overdue_books(number_results, rented_book_list):
     import datetime

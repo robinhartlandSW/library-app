@@ -19,14 +19,16 @@
         
         <div id="other-view-link"><a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
         <div id="home-link"><a href="/home">HOME</a></div>
-        <h1>{{reader_name}}</h1>
-
-        <div id="reader-info">
+        <h1 style="margin-bottom:10px">{{reader_name}}</h1>
+        <div class="action-heading" style="margin-bottom: 30px;">ON LOAN: {{num_books_borrowed}}/8 &nbsp&nbsp&nbsp ID: {{ID}} &nbsp&nbsp&nbsp BALANCE: {{fine}}</div>
+    
+        <!--
             ID: {{ID}} <br />
             Books borrowed: {{num_books_borrowed}} of 8
             <br />
             Fines due: {{fine}}
-        </div>
+        -->
+        
 
         % num_fine = fine[1:]
 
