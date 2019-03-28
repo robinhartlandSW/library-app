@@ -66,7 +66,7 @@ def return_book():
 def get_edition_details(db):
     serial_number = request.json
     editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
-    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone())
+    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
     return json.dumps(refine_book_info(edition[0]))
 
 @post('/find_matching_names')
