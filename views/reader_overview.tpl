@@ -8,6 +8,14 @@
     </head>
 
     <body>
+        % try:
+            % fine_added
+        %except NameError:
+            % fine_added=0
+        % end
+        <script>
+        success_message_fine({{fine_added}})
+        </script>
         
         <div id="other-view-link">
             <a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
@@ -17,7 +25,6 @@
         </div>
         <h1>
             Registered reader overview <br/>
-            {{page_head_message}}
         </h1>
         <div id="reader-info">
             <h2>{{reader_name}}</h2>
@@ -82,10 +89,10 @@
         <div class="container half-width">
             <div class="block user-input-area">
                 <h2> Add charges/fines </h2>
-                <form action ="/reader_overview/fine" method="post">
+                <form action ="/reader_overview_fine" method="post">
                     <input type="hidden" name="user_id" value={{ID}}>
-                    Amount (£): <input type="text" name="added_fine"><br>
-                    <input type="submit" value="Submit">
+                    Amount (£): <input type="text" name="added_fine" id="added_fine"><br>
+                    <input type="submit" value="Submit" onclick='return verify_fine_add()'>
                 </form>
             </div>
         </div>
@@ -93,10 +100,10 @@
             <div class="block">
                 <div class = "user-input-area">
                     <h2> Record payment </h2>
-                    <form action ="/reader_overview/pay_fine" method="post">
+                    <form action ="/reader_overview_pay_fine" method="post">
                         <input type="hidden" name="user_id" value={{ID}}>
-                        Amount (£): <input type="text" name="paid_fine"><br>
-                    <input type="submit" value="Submit">
+                        Amount (£): <input type="text" name="paid_fine" id="paid_fine"><br>
+                    <input type="submit" value="Submit" onclick='return verify_fine_payment()'>
                 </form>
                 </div>
             </div>

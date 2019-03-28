@@ -232,7 +232,7 @@ def show_reservation_form(serial_number, db):
 
     return template("reserve_book.tpl", edition=edition)
 
-@post('/reader_overview/fine')
+@post('/reader_overview_fine')
 def fine_reader(db):
     fine = request.forms.get('added_fine')
     fine = Decimal(fine)
@@ -250,9 +250,9 @@ def fine_reader(db):
     number_results = len(rented_book_list)
     overdue_books = number_overdue_books(number_results, rented_book_list)
 
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books)
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=1)
 
-@post('/reader_overview/pay_fine')
+@post('/reader_overview_pay_fine')
 def pay_fine(db):
     fine = request.forms.get('paid_fine')
     fine = Decimal(fine)
@@ -269,7 +269,7 @@ def pay_fine(db):
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
     overdue_books = number_overdue_books(number_results, rented_book_list)
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books)
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE PAID', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=-1)
 
 
 ##### HELPER FUNCTIONS #####

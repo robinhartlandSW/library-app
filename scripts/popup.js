@@ -32,3 +32,45 @@ function check_conditions(num_books_borrowed, fine, overdue_books){
 function no() {
     return false
 }
+
+function success_message_fine(x) {
+    let y = parseInt(x)
+    if (y === 1) {
+        popup("Fine added")
+    }
+    else if (y === -1) {
+        popup("Fine paid")
+    }
+}
+
+function verify_fine_add() {
+    let fine = document.getElementById("added_fine").value;
+    if (fine.length === 0) {
+        popup("Failed - enter fine value")
+        return false
+    }
+    let Q = parseFloat(fine)
+    if (isNaN(Q)) {
+        popup("Please enter a valid fine.")
+        return false
+    }
+    else {
+        return true
+    }
+}
+
+function verify_fine_payment() {
+    let fine = document.getElementById("paid_fine").value;
+    if (fine.length === 0) {
+        popup("Failed - enter amount paid")
+        return false
+    }
+    let Q = parseFloat(fine)
+    if (isNaN(Q)) {
+        popup("Please enter a valid fine.")
+        return false
+    }
+    else {
+        return true
+    }
+}
