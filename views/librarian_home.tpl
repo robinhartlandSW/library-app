@@ -32,29 +32,30 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="row">
-                <div class="column">
-                    <div class="home-block">
-                        <div class="action-heading">LOG A RETURN</div>
-                        <div id="serial-box">
+            <div class="column">
+                <div class="home-block">
+                    <div class="action-heading">LOG A RETURN</div><br>
+                    <div id="serial-box">
                         <div class="serial-no-container">
-                                <form action="/return_book_to_database" method="POST">
-                                    <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
-                                </form>
+                            <form action="/return_book_to_database" method="POST">
+                                <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
+                            </form>
                         </div>
                     </div>
-                    </div>
                 </div>
-                <div class="column">
-                    <div class="home-block">
-                        <div class="action-heading">USER ACCOUNTS</div>
-                        <!--
+            </div>
+
+            <div class="column">
+                <div class="home-block">
+                    <div class="action-heading">USER ACCOUNTS</div>
+                        <!-- TODO: change to one search box with dropdown of registered users :)
                         % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', extra_text="for loans and fines.", edition_ID=0)
                         -->
                     </div>
                 </div>
-        </div><br>
+            </div><br>
 
         <h2>CHECK OUT AND RESERVE BOOKS</h2>
 
