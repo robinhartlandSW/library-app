@@ -8,12 +8,18 @@
     </head>
 
     <body>
-
-        <div id="other-view-link"><a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
+        % try:
+            % fine_added
+        %except NameError:
+            % fine_added=0
+        % end
+        <script>
+        success_message_fine({{fine_added}})
+        </script>
+        
+        <div id="other-view-link"><a style="text-decoration: none" href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
         <div id="home-link"><a href="/home">HOME</a></div>
-
         <h1>{{reader_name}}</h1>
-        <h2>{{page_head_message}}</h2>
 
         <div id="reader-info">
             ID: {{ID}} <br />
@@ -41,9 +47,9 @@
                     <div class="action-heading">ADD FINES AND CHARGES</div><br>
                     <div id="input-box">
                         <div class="input-container">
-                            <form action="/reader_overview/fine" method="POST">
+                            <form action="/reader_overview_fine" method="POST" onsubmit='return verify_fine_add()'>
                                 <input type="hidden" name="user_id" value={{ID}}>
-                                <input type="text" name="added_fine" placeholder="Amount (£)">
+                                <input type="text" name="added_fine" placeholder="Amount (£)" id="added_fine">
                             </form>
                         </div>
                     </div>
@@ -55,9 +61,9 @@
                     <div class="action-heading">RECORD A PAYMENT</div><br>
                     <div id="input-box">
                         <div class="input-container">
-                            <form action="/reader_overview/pay_fine" method="POST">
+                            <form action="/reader_overview_pay_fine" method="POST" onsubmit ='return verify_fine_payment()'>
                                 <input type="hidden" name="user_id" value={{ID}}>
-                                <input type="text" name="paid_fine" placeholder="Amount (£)">
+                                <input type="text" name="paid_fine" placeholder="Amount (£)" id="paid_fine">
                             </form>
                         </div>
                     </div>
