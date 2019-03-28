@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS readers (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         firstName VARCHAR(255) NOT NULL,
         lastName VARCHAR(255) NULL,
-        fine REAL NOT NULL
+        fine DECIMAL NOT NULL
     );

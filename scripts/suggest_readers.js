@@ -30,7 +30,7 @@ function find_matching_names(first_name, last_name) {
             let reader_name_dropdown = document.getElementById("reader_name_dropdown")
 
             // delete all elements from the dropdown
-            while (reader_name_dropdown > 0) {
+            while (reader_name_dropdown.length > 0) {
                 reader_name_dropdown.remove(0);
             }
 

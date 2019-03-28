@@ -1,10 +1,12 @@
 import json
 import datetime
+from decimal import Decimal, getcontext
 from bottle import get, post, install, run, request, route, template, static_file, redirect
 from bottle_sqlite import SQLitePlugin
 database_file = 'library-nomad.db'
 install(SQLitePlugin(dbfile=database_file))
 
+TWO_DECIMAL_PLACES = Decimal(10) ** -2
 
 ##### STATIC #####
 
@@ -99,9 +101,9 @@ def check_out_book(db):
     author = request.forms.get('author')
     serial_number = request.forms.get('serial_number')
     days_rented = request.forms.get('days_rented')
-    current_fine = request.forms.get('current_fine')[-3:-1]
+    current_fine = request.forms.get('current_fine')
     days_rented = int(days_rented)
-    current_fine = float(current_fine)
+    current_fine = fine_string_to_decimal(current_fine)
 
     if current_fine > 0:
         return template('message_page.tpl', message = 'USER MUST PAY FINE BEFORE RENTING OUT BOOK.', submessage = 'Return to the readers page and ensure that all fines are paid and there are no overdue books.')
@@ -155,7 +157,7 @@ def add_new_edition(db):
     if check_existence == None:
         edition_id = db.execute("INSERT INTO editions(author, title, genre, ISBN) VALUES (?,?,?,?)", (author, title, genre, ISBN)).lastrowid
         #TODO: display user added confirmation
-        document.getElementById("new_reader_form").reset()
+        return template('new_book', success = 1)
     #TODO: else error message book already exists
 
 @post('/add_new_copy_by_ISBN')
@@ -227,12 +229,12 @@ def show_reservation_form(serial_number, db):
 @post('/reader_overview/fine')
 def fine_reader(db):
     fine = request.forms.get('added_fine')
-    fine = float(fine)
+    fine = Decimal(fine)
     user_id = request.forms.get('user_id')
     current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
-    current_fine = float(current_fine)
-    new_fine = current_fine + fine
-    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))
+    current_fine = Decimal(current_fine)
+    new_fine = Decimal(current_fine + fine).quantize(TWO_DECIMAL_PLACES)
+    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (str(new_fine), user_id))
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
@@ -245,14 +247,15 @@ def fine_reader(db):
     return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books)
 
 @post('/reader_overview/pay_fine')
-def fine_reader(db):
+def pay_fine(db):
     fine = request.forms.get('paid_fine')
-    fine = float(fine)
+    fine = Decimal(fine)
     user_id = request.forms.get('user_id')
     current_fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
-    current_fine = float(current_fine)
-    new_fine = current_fine - fine
-    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (new_fine, user_id))
+    current_fine = Decimal(current_fine)
+
+    new_fine = Decimal(current_fine - fine).quantize(TWO_DECIMAL_PLACES)
+    db.execute('UPDATE readers SET fine = ? WHERE ID = ?', (str(new_fine), user_id))
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
@@ -348,6 +351,9 @@ def number_overdue_books(number_results, rented_book_list):
         if due_date_time < now:
             overdue_books += 1
     return overdue_books
+
+def fine_string_to_decimal(fine_string):
+    return Decimal(fine_string.split('£')[-1])
     
 
 

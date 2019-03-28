@@ -19,8 +19,7 @@ function show_serial_numbers(editionID) {
                     
                     for (let serial_number of serial_numbers) {
                         let list_element = document.createElement("LI");
-                        form = book_info_form(serial_number)
-                        list_element.appendChild(form);
+                        list_element.innerText = serial_number
 
                         serial_number_list.appendChild(list_element);
                     }
@@ -36,20 +35,4 @@ function show_serial_numbers(editionID) {
         }
     )
 
-}
-
-function book_info_form(serial_number) {
-    let form = document.createElement("FORM");
-    form.method = "get";
-
-    // TODO: location page
-    form.action = `/`;
-
-    let label = document.createElement("LABEL")
-    label.htmlFor = serial_number;
-    label.innerText = serial_number;
-
-    form.appendChild(label);
-
-    return form;
 }

@@ -3,11 +3,11 @@
         <label>FIND A READER:</label>
         <div>
             <label for="reader_first_name_input">First name:</label>
-            <input type="text" id="reader_first_name_input" onchange="suggest_readers()" />
+            <input type="text" id="reader_first_name_input" onkeydown="suggest_readers()" autocomplete="off"/>
         </div>
         <div>
             <label for="reader_last_name_input">Last name (optional):</label>
-            <input type="text" id="reader_last_name_input" />
+            <input type="text" id="reader_last_name_input"  autocomplete="off"/>
         </div>
 
 
