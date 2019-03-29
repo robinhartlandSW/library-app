@@ -196,8 +196,11 @@ def add_new_edition(db):
         save_path = "./img"
         name, ext = os.path.splitext(cover.filename)
         filename = ISBN + ext
-        file_path = "{path}/{file}".format(path=save_path, file=filename)
-        cover.save(file_path)
+        try:
+            file_path = "{path}/{file}".format(path=save_path, file=filename)
+            cover.save(file_path)
+        except:
+            pass
 
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
