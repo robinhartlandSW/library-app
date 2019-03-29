@@ -357,3 +357,16 @@ a {
     margin-right: 0;
     width: 180px !important;
 }
+#all_button{
+    float: right;
+    background-color: whitesmoke;
+	border: none;
+	color: #424242;
+	padding: 12px 44px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	cursor: pointer;
+    border: 1px solid  #424242;
+}
+

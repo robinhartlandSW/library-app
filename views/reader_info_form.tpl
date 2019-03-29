@@ -1,7 +1,5 @@
 
-<div class="user-lookup">
-    <form class="librarian-form" method="post" action={{action}}>
-
+    <form class="user-lookup" method="post" action={{action}} onsubmit='return empty_search()'>
         <div class="user-lookup-element">
             <input type="text" placeholder="Start Typing a name..." id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
         </div>
