@@ -3,6 +3,7 @@ import datetime
 from decimal import Decimal, getcontext
 from bottle import get, post, install, run, request, route, template, static_file, redirect
 from bottle_sqlite import SQLitePlugin
+import os
 database_file = 'library-nomad.db'
 install(SQLitePlugin(dbfile=database_file))
 
@@ -71,7 +72,7 @@ def return_book():
 @post('/get_edition_details')
 def get_edition_details(db):
     serial_number = request.json
-    editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
+    editionID = serial_number_to_edition_ID(serial_number)
     edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
     return json.dumps(refine_book_info(edition[0]))
 
@@ -120,7 +121,18 @@ def reader_overview(db):
     number_reservations = len(reserved_books)
     overdue_books = number_overdue_books(number_results, rented_book_list)
     return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books, number_reservations=number_reservations, reservation_list=reserved_books)
-        
+    
+@post('/check_if_copy_reserved')
+def check_if_copy_reserved(db):
+    (serial_number, readerID) = request.json
+    editionID = serial_number_to_edition_ID(serial_number, db)
+
+    num_reservations_for_that_edition = db.execute("SELECT COUNT(ID) FROM reservations WHERE editionID = ?", (editionID, )).fetchone()[0]
+    available_copies_of_that_edition = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID IS NULL AND editionID = ?", (editionID, )).fetchone()[0]
+
+    return JSON.stringify(num_reservations_for_that_edition >= available_copies_of_that_edition)
+
+
 @post('/check_out_book')
 def check_out_book(db): 
     title = request.forms.get('title')
@@ -173,13 +185,21 @@ def return_book_to_database(db):
     
     return template("book_returned.tpl", message = message)
 
-@post('/add_new_edition')
+@route('/add_new_edition', method='POST')
 def add_new_edition(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
     genre = request.forms.get('genre')
     location = request.forms.get('location')
     ISBN = request.forms.get('ISBN')
+    cover = request.files.get('cover')
+    if cover is not None:
+        save_path = "./img"
+        name, ext = os.path.splitext(cover.filename)
+        filename = ISBN + ext
+        file_path = "{path}/{file}".format(path=save_path, file=filename)
+        cover.save(file_path)
+
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
         edition_id = db.execute("INSERT INTO editions(author, title, genre, location, ISBN) VALUES (?,?,?,?,?)", (author, title, genre, location, ISBN)).lastrowid
@@ -423,6 +443,9 @@ def reserved_book_list(db, reader_ID):
         reserved_book_list.append([' ', str(reserved_books[i]['title']), str(reserved_books[i]['author']), ' '])
     return reserved_book_list
 
+def serial_number_to_edition_ID(serial_number, db):
+    editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
+    return editionID
 def reservation_already_exists(db, reader_ID, edition_ID):
     existing_reservations = db.execute("SELECT * FROM reservations WHERE reserver_ID = ? AND editionID = ?", (reader_ID, edition_ID)).fetchall()
     if existing_reservations == []:

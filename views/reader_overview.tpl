@@ -3,8 +3,9 @@
     <head>
         <title>Account | {{reader_name}}</title>
         % include('stylesheet_link_subtemplate.tpl')
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        % include('sweetalert_link_subtemplate.tpl')
         <script src="scripts/popup.js"></script>
+        <script src="scripts/copy_reserved.js"></script>
     </head>
 
     <body>
@@ -37,8 +38,8 @@
             <form id="check_out" onsubmit = 'return check_conditions({{num_books_borrowed}}, {{num_fine}}, {{num_overdue_books}})'  action="/check_out_book" method="POST">
                 <input type="hidden" id="readerID" name="readerID" value={{ID}}>
                 <input type="hidden" id="current_fine" name="current_fine" value={{fine}}>
-                <input type="number" id="checkout-box" name="serial_number" placeholder="Serial No." required/>
-                <input type="days_rented" id="checkout-box" name="days_rented" placeholder="Loan Length (Days)" required/>
+                <input type="number" class="checkout-box" id="serial_number" name="serial_number" placeholder="Serial No." required/>
+                <input type="days_rented" class="checkout-box" name="days_rented" placeholder="Loan Length (Days)" required/>
                 <input type="submit" value="CHECK OUT">
             </form>
         </div>
