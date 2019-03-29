@@ -1,1 +1,1 @@
-INSERT INTO copies (editionID) VALUES (4), (4), (5), (5), (6), (8), (9), (9), (9), (9), (9), (9);
+INSERT INTO copies (editionID) VALUES (1), (2), (3), (4), (7), (4), (4), (5), (6), (8), (9), (9), (9), (9), (9), (9);
