@@ -3,6 +3,7 @@ import datetime
 from decimal import Decimal, getcontext
 from bottle import get, post, install, run, request, route, template, static_file, redirect
 from bottle_sqlite import SQLitePlugin
+import os
 database_file = 'library-nomad.db'
 install(SQLitePlugin(dbfile=database_file))
 
@@ -183,13 +184,21 @@ def return_book_to_database(db):
     
     return template("book_returned.tpl", message = message)
 
-@post('/add_new_edition')
+@route('/add_new_edition', method='POST')
 def add_new_edition(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
     genre = request.forms.get('genre')
     location = request.forms.get('location')
     ISBN = request.forms.get('ISBN')
+    cover = request.files.get('cover')
+    if cover is not None:
+        save_path = "./img"
+        name, ext = os.path.splitext(cover.filename)
+        filename = ISBN + ext
+        file_path = "{path}/{file}".format(path=save_path, file=filename)
+        cover.save(file_path)
+
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
         edition_id = db.execute("INSERT INTO editions(author, title, genre, location, ISBN) VALUES (?,?,?,?,?)", (author, title, genre, location, ISBN)).lastrowid
