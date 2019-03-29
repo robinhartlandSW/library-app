@@ -54,10 +54,9 @@ def librarian_search(db):
     search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
     return template('librarian_home', editions=search_results)
 
-@get('/librarian_show_all')
+@get('/show_full_library')
 def librarian_search(db):
-    phrase = ''
-    search_results = get_search_results(db, phrase)
+    search_results = get_search_results(db, '')
     search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
     return template('librarian_home', editions=search_results)
 
@@ -119,12 +118,8 @@ def reader_overview(db):
     number_results = len(rented_book_list)
     reserved_books = reserved_book_list(db, reader_ID)
     number_reservations = len(reserved_books)
-
     overdue_books = number_overdue_books(number_results, rented_book_list)
-
     return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books, number_reservations=number_reservations, reservation_list=reserved_books)
-    
-
         
 @post('/check_out_book')
 def check_out_book(db): 
@@ -135,11 +130,8 @@ def check_out_book(db):
     current_fine = request.forms.get('current_fine')
     days_rented = int(days_rented)
     current_fine = fine_string_to_decimal(current_fine)
-
-
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
-
     readerID = request.forms.get('readerID')
 
     has_overdue_book = user_has_overdue_book(db, readerID)
@@ -159,8 +151,6 @@ def check_out_book(db):
     else:
         return get_reader_overview(db, readerID, 3)
 
-
-    
 
 @post('/return_book_to_database')
 def return_book_to_database(db):
