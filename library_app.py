@@ -190,12 +190,6 @@ def add_new_edition(db):
     location = request.forms.get('location')
     ISBN = request.forms.get('ISBN')
     cover = request.files.get('cover')
-    if cover is not None:
-        save_path = "./img"
-        name, ext = os.path.splitext(cover.filename)
-        filename = ISBN + ext
-        file_path = "{path}/{file}".format(path=save_path, file=filename)
-        cover.save(file_path)
 
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
@@ -203,6 +197,15 @@ def add_new_edition(db):
         return template('new_book', success = 1)
     else:
         return template('new_book', success = -3)
+
+    if cover is not None:
+        save_path = "./img"
+        name, ext = os.path.splitext(cover.filename)
+        filename = ISBN + ext
+        file_path = "{path}/{file}".format(path=save_path, file=filename)
+        cover.save(file_path)
+
+    
 
 @post('/add_new_copy_by_ISBN')
 def add_new_copy(db):
