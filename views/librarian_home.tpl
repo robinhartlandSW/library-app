@@ -53,7 +53,7 @@
                     <div class="action-heading">LOG A RETURN</div><br>
                     <div id="input-box">
                         <div class="input-container">
-                            <form action="/return_book_to_database" method="POST" onsubmit="confirm_return()">
+                            <form action="/return_book_to_database" method="POST" id="form_return" onsubmit="confirm_return()">
                                 <input type="number" placeholder="Serial No." name="serial_number" id="serial_number" required/>
                             </form>
                         </div>

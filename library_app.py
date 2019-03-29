@@ -73,9 +73,10 @@ def return_book():
 @post('/get_edition_details')
 def get_edition_details(db):
     serial_number = request.json
-    editionID = serial_number_to_edition_ID(serial_number)
-    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
-    return json.dumps(refine_book_info(edition[0]))
+    editionID = serial_number_to_edition_ID(serial_number, db)
+    e = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
+    nice_output = {'title': e['title'], 'author' : e['author'], 'location' : e['location'], 'genre' : e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']}
+    return json.dumps(nice_output)
 
 @post('/find_matching_names')
 def find_matching_names(db):
