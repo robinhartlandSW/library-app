@@ -29,12 +29,13 @@
             <div class="column">
                 <h2>NEW BOOK</h2>
                 <div class="add-form">
-                    <form action="/add_new_edition" method="POST" id="POST"><br>
+                    <form action="/add_new_edition" method="POST" id="POST" enctype="multipart/form-data"><br>
                         TITLE: <input type="text" name="title" id="title"><br>
                         AUTHOR: <input type="text" name="author" id="author"><br>
                         GENRE: <input type="text" name="genre" id="genre"><br>
                         LOCATION: <input type="text" name="location" id="location"><br>
                         ISBN: <input type="text" name="ISBN" id="ISBN"><br>
+                        COVER: <input type="file" id="cover" name="cover" accept="image/png, image/jpeg">
                         <input type="submit" value ="ADD BOOK" onclick='return check_conditions()'>
                     </form>
                 </div>

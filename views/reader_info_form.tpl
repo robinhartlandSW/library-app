@@ -1,7 +1,8 @@
 
     <form class="user-lookup" method="post" action={{action}} onsubmit='return empty_search()'>
-        <div class="user-lookup-element">
-            <input type="text" placeholder="Start Typing a name..." id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
+
+        <div class="lookup-search">
+            <input type="text" style="width: 220px" placeholder="Start Typing a name..." id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
         </div>
     
         <div class="user-lookup-element" id="lookup-search">

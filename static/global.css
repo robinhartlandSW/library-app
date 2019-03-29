@@ -94,7 +94,7 @@ h1, h2 {
 }
 
 .block, .checkout-block, .centred-block {
-    margin: 15px;
+    margin: 20px;
     background-color: #ededed;
 }
 
@@ -132,11 +132,6 @@ h1, h2 {
 
 a {
     color: rgb(88, 57, 21);
-}
-
-form {
-    text-align: left;
-    margin-block-end: 0;
 }
 
 .see-available-copies-button {
@@ -298,6 +293,22 @@ a {
     border: 1px solid #ccc;
 }
 
+.column {
+    flex: 50%;
+    max-width: 50%;
+    padding: 0 4px;
+}
+
+.column .home-block {
+    margin: 10px 10px;
+    padding: 20px;
+    width: calc(100% - 15px);
+    height: 160px;
+    background-color:#ededed;
+    vertical-align: middle;
+}
+
+
 @media screen and (max-width: 1050px) {
     .column {
         max-width: 50%;
@@ -333,31 +344,26 @@ a {
     padding: 0 4px;
 }
 
-.column {
-    flex: 50%;
-    max-width: 50%;
-    padding: 0 4px;
+#reader-name-input input[type="text"]{
+    margin-right: 0;
+    width: 120px !important;
 }
 
-.column .home-block {
-    margin: 10px 10px;
-    padding: 20px;
-    width: calc(100% - 15px);
-    height: 160px;
-    background-color:#ededed;
-    vertical-align: middle;
+#reader-name-dropdown {
+    width: 200px;
+}
+
+.lookup-search, .lookup-search #reader-name-input {
+    margin: 0;
+    float: left;
 }
 
 .user-lookup-element {
     float: left;
-    margin: 10px 10px;
+    margin-left: 2%;
 }
 
-#lookup-search {
-    margin-right: 0;
-    width: 180px !important;
-}
-#all_button{
+#all_button, .search-result-more-info-button{
     float: right;
     background-color: whitesmoke;
 	border: none;
@@ -368,5 +374,19 @@ a {
 	font-size: 14px;
 	cursor: pointer;
     border: 1px solid  #424242;
+    margin-right: 16px;
 }
 
+.swal-modal {
+    background-color: rgba(237,237,237);
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+
+.swal-button {
+    border-radius: 0;
+    border: 1px solid  #424242;
+    background-color: whitesmoke;
+    color: black;
+    font-weight: normal;
+}
