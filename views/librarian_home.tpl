@@ -50,8 +50,8 @@
 
             <div class="column">
                 <div class="home-block">
-                    <div class="action-heading">USER ACCOUNTS</div>                       
-                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', edition_ID=0)
+                    <div class="action-heading">USER ACCOUNTS</div><br>
+                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='VIEW', edition_ID=0)
                     </div>
                 </div>
             </div><br>

@@ -61,6 +61,6 @@ function apply_dropdown_placeholder_text() {
     let reader_name_dropdown = document.getElementById("reader_name_dropdown")
     remove_all_dropdown_elements(reader_name_dropdown);
     placeholder = document.createElement("option")
-    placeholder.text = "type a name..."
+    placeholder.text = "Select a User"
     reader_name_dropdown.add(placeholder)
 }

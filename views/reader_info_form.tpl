@@ -1,15 +1,30 @@
 
+<div class="user-lookup">
     <form class="librarian-form" method="post" action={{action}}>
-        <div>
-            <input type="text" id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
+
+        <div class="user-lookup-element">
+            <input type="text" placeholder="Start Typing a name..." id="reader_name_input" onkeyup="suggest_readers()" autocomplete="off"/>
+        </div>
+    
+        <div class="user-lookup-element" id="lookup-search">
+            <select id="reader_name_dropdown" name="reader_name_input">
+                <option>Select a User</option>
+            </select>
+        </div>
+        
+        <div class="user-lookup-element">
+            <input type="submit" value="{{button_text}}"/>
+            % if edition_ID != 0:
+                <input type="hidden" name="edition_ID" value="{{edition['ID']}}" />
+            % end
         </div>
 
-        <select id="reader_name_dropdown" name="reader_name_input">
-            <option> Type a name above...</option>
-        </select>
-
-        <input type="submit" value="{{button_text}}" />
-        % if edition_ID != 0:
-            <input type="hidden" name="edition_ID" value="{{edition['ID']}}" />
-        % end
     </form>
+</div>
+
+
+    
+
+
+
+
