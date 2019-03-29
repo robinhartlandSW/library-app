@@ -222,7 +222,7 @@ def add_new_copy(db):
 def add_new_copy(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
-    book_edition = db.execute("SELECT * FROM editions WHERE title = (?) AND author = (?)", [title, author]).fetchone()
+    book_edition = db.execute("SELECT * FROM editions WHERE (title = (?) AND author = (?))", (title, author)).fetchone()
     if book_edition != None:
         book_id = book_edition['ID']
         copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid
