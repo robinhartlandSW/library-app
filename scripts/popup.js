@@ -22,20 +22,19 @@ function try_to_borrow_copy(num_books_borrowed, fine, overdue_books) {
     let days_to_rent_for = days_rented_box.value
 
     if (books_borrowed_int > 7) {
-        popup('Failed - user has borrowed too many books');
+        popup('FAILED: 8 BOOK LOAN LIMIT REACHED')
     }
     else if (fine_int > 0) {
-        popup('Failed - user must pay fine');
+        popup('FAILED: USER HAS OUTSTANDING FINES')
     }
     else if (overdue_int > 0) {
-        popup('Failed - user has overdue books');
-    } 
+        popup('FAILED: USER HAS OVERDUE BOOKS')
+    }
     else {
         borrow_if_not_reserved(serial_number, readerID, days_to_rent_for)
     }
+    return true
 }
-
-
 
 function no() {
     return false
@@ -44,47 +43,43 @@ function no() {
 function success_message_fine(x) {
     let y = parseInt(x)
     if (y === 1) {
-        popup("Fine added")
+        popup("FINE ADDED")
     }
     else if (y === -1) {
-        popup("Fine paid")
+        popup("PAYMENT RECORDED")
     }
     else if (y === 2) {
-        popup("Success! Book rented.")
+        popup("BOOK SUCCESSFULLY CHECKED OUT")
     }
     else if (y === 3) {
-        popup("Failed. Book not available to be rented.")
+        popup("FAILED: THIS BOOK IS UNAVAILABLE")
     }
 }
 
 function verify_fine_add() {
     let fine = document.getElementById("added_fine").value;
     if (fine.length === 0) {
-        popup("Failed - enter fine value")
+        popup("FAILED: PLEASE ENTER AN AMOUNT")
         return false
     }
     let Q = parseFloat(fine)
     if (isNaN(Q)) {
-        popup("Please enter a valid fine.")
+        popup("FAILED: PLEASE ENTER A VALID AMOUNT")
         return false
     }
-    else {
-        return true
-    }
+    return true
 }
 
 function verify_fine_payment() {
     let fine = document.getElementById("paid_fine").value;
     if (fine.length === 0) {
-        popup("Failed - enter amount paid")
+        popup("FAILED: PLEASE ENTER AN AMOUNT")
         return false
     }
     let Q = parseFloat(fine)
     if (isNaN(Q)) {
-        popup("Please enter a valid fine.")
+        popup("FAILED: PLEASE ENTER A VALID AMOUNT")
         return false
     }
-    else {
-        return true
-    }
+    return true
 }

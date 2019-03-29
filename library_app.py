@@ -55,10 +55,9 @@ def librarian_search(db):
     search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
     return template('librarian_home', editions=search_results)
 
-@get('/librarian_show_all')
+@get('/show_full_library')
 def librarian_search(db):
-    phrase = ''
-    search_results = get_search_results(db, phrase)
+    search_results = get_search_results(db, '')
     search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
     return template('librarian_home', editions=search_results)
 
@@ -140,19 +139,17 @@ def is_copy_reserved_by_someone_else(db):
 def check_out_book(db): 
     (serial_number, readerID, days_rented) = request.json
     days_rented = int(days_rented)
- 
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
 
-    # this validation is now done client side by the try_to_borrow_copy() function in popup.js
-    # has_overdue_book = user_has_overdue_book(db, readerID)
-    # if has_overdue_book[0] == True:
-    #     books_overdue = has_overdue_book[1]
-    #     bookstring = ''
-    #     for book in books_overdue:
-    #         bookstring += (str(book['copyID']) + ', ')
-        
-    #     return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
+    has_overdue_book = user_has_overdue_book(db, readerID)
+    if has_overdue_book[0] == True:
+        books_overdue = has_overdue_book[1]
+        bookstring = ''
+        for book in books_overdue:
+            bookstring += (str(book['copyID']) + ', ')
+ 
+    due_date = now + datetime.timedelta(days = days_rented)
 
     if copy_is_in_library(serial_number, db):
         db.execute('UPDATE copies SET readerID=? WHERE copyID = ?', (readerID, serial_number))
@@ -199,8 +196,11 @@ def add_new_edition(db):
         save_path = "./img"
         name, ext = os.path.splitext(cover.filename)
         filename = ISBN + ext
-        file_path = "{path}/{file}".format(path=save_path, file=filename)
-        cover.save(file_path)
+        try:
+            file_path = "{path}/{file}".format(path=save_path, file=filename)
+            cover.save(file_path)
+        except:
+            pass
 
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
@@ -208,6 +208,15 @@ def add_new_edition(db):
         return template('new_book', success = 1)
     else:
         return template('new_book', success = -3)
+
+    if cover is not None:
+        save_path = "./img"
+        name, ext = os.path.splitext(cover.filename)
+        filename = ISBN + ext
+        file_path = "{path}/{file}".format(path=save_path, file=filename)
+        cover.save(file_path)
+
+    
 
 @post('/add_new_copy_by_ISBN')
 def add_new_copy(db):
@@ -224,7 +233,7 @@ def add_new_copy(db):
 def add_new_copy(db):
     title = request.forms.get('title')
     author = request.forms.get('author')
-    book_edition = db.execute("SELECT * FROM editions WHERE title = (?) AND author = (?)", [title, author]).fetchone()
+    book_edition = db.execute("SELECT * FROM editions WHERE (title = (?) AND author = (?))", (title, author)).fetchone()
     if book_edition != None:
         book_id = book_edition['ID']
         copy_id = db.execute("INSERT INTO copies(editionID) VALUES (?)", (book_id,)).lastrowid

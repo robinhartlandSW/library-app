@@ -14,22 +14,21 @@
 
     <body>
 
-    % try:
-        % reservation_added
-    %except NameError:
-        % reservation_added=0
-    % end
-    <script>
-    reservation_added({{reservation_added}})
-    </script>
+        % try:
+            % reservation_added
+        %except NameError:
+            % reservation_added=0
+        % end
 
-        <div id="other-view-link">
-            <a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
-        </div>
+        <script>
+            reservation_added({{reservation_added}})
+        </script>
 
+        <div id="other-view-link"><a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a></div>
         <h1>LIBRARIAN HOME</h1>
 
         <div class="row">
+
             <div class="column">
                 <a href="/add_new_edition">
                     <div class="home-block" id="big-button">
@@ -48,6 +47,7 @@
         </div>
 
         <div class="row">
+
             <div class="column">
                 <div class="home-block">
                     <div class="action-heading">LOG A RETURN</div><br>
@@ -69,17 +69,13 @@
                 </div>
             </div><br>
 
-            
-
-        <h2 id="search_reserve">SEARCH AND RESERVE BOOKS </h2>  
-
+            <h2 id="search_reserve">SEARCH AND RESERVE BOOKS </h2>  
             <div id="search-box">
                 <div class="search-element-container">
                     <form action="/librarian_search">
                         <input type="text" placeholder="Search..." name="phrase">
                     </form>
                 </div> 
-                
             </div>
     
             % for edition in editions:
@@ -104,7 +100,8 @@
                     </div>
                 </div>
             % end
-            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button">SHOW ENTIRE LIBRARY</button></a></p>
+
+            <p id="all_button_p"><a href = "/show_full_library"><button id = "all_button">SHOW ENTIRE LIBRARY</button></a></p>
         </body>
     
     </html>

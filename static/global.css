@@ -383,6 +383,10 @@ a {
     border-radius: 0;
 }
 
+.swal-title {
+    font-size: 21px;
+}
+
 .swal-button {
     border-radius: 0;
     border: 1px solid  #424242;
