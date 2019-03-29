@@ -89,22 +89,22 @@
                         <div class="title-text">{{edition['title']}}</div>
                         <div class="info-text">
                             {{edition['author']}}<br/>
-                            {{edition['genre']}}<br/>
-                            ISBN: {{edition['ISBN']}}
-                        </div>               
-                        <div id="num-available-copies-button">   
+                            {{edition['genre']}}<br/><br>
+                            ISBN: {{edition['ISBN']}}<br/>
                             Copies in stock: {{edition['num_available_copies']}}<br>
                             Location: {{edition['location']}}
+                        </div>               
+                        <div id="num-available-copies-button">   
                             % if edition['num_available_copies'] > 0:
-                                <button class="search-result-more-info-button"  onclick="show_serial_numbers({{edition['ID']}})"> See serial numbers of available copies > </button>
+                                <button class="search-result-more-info-button"  onclick="show_serial_numbers({{edition['ID']}})">VIEW AVAILABLE SERIAL NOs</button>
                             % else:
-                                <button class="search-result-more-info-button" onclick="window.location.href = '/show_reservation_form/{{edition['ID']}}'"> Reserve a copy > </button>
+                                <button class="search-result-more-info-button" onclick="window.location.href = '/show_reservation_form/{{edition['ID']}}'">RESERVE A COPY</button>
                             % end
                         </div>               
                     </div>
                 </div>
             % end
-            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button"> Show all Books </button></a></p>
+            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button">SHOW ENTIRE LIBRARY</button></a></p>
         </body>
     
     </html>
