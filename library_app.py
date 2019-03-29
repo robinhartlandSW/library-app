@@ -72,9 +72,10 @@ def return_book():
 @post('/get_edition_details')
 def get_edition_details(db):
     serial_number = request.json
-    editionID = serial_number_to_edition_ID(serial_number)
-    edition = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
-    return json.dumps(refine_book_info(edition[0]))
+    editionID = serial_number_to_edition_ID(serial_number, db)
+    e = db.execute("SELECT * FROM editions WHERE ID = ?", (editionID,)).fetchone()
+    nice_output = {'title': e['title'], 'author' : e['author'], 'location' : e['location'], 'genre' : e['genre'], 'ISBN' : e['ISBN'], 'ID' : e['ID']}
+    return json.dumps(nice_output)
 
 @post('/find_matching_names')
 def find_matching_names(db):
@@ -161,9 +162,11 @@ def check_out_book(db):
     return json.dumps(book_checked_out)
 
 
-@post('/return_book_to_database')
-def return_book_to_database(db):
-    serial_number = request.forms.get('serial_number')
+    
+
+@get('/return_book_to_database/<serial_number>')
+def return_book_to_database(serial_number, db):
+    returnable = copy_is_on_loan(serial_number, db)
     reader_id = db.execute('SELECT readerID FROM copies WHERE copyID = ?', (serial_number,)).fetchone()[0]
     message = ''
     is_overdue = is_book_overdue(db, serial_number)
@@ -178,9 +181,8 @@ def return_book_to_database(db):
         message = f'BOOK RETURNED LATE. Reader fine now £{user_new_fine}'
     db.execute("UPDATE copies SET readerID=NULL WHERE copyID == ?", (serial_number,))
     db.execute("UPDATE copies SET due_date=NULL WHERE copyID == ?", (serial_number,))
-
-    
-    return template("book_returned.tpl", message = message)
+ 
+    return json.dumps(returnable)
 
 @route('/add_new_edition', method='POST')
 def add_new_edition(db):
@@ -213,8 +215,6 @@ def add_new_edition(db):
         filename = ISBN + ext
         file_path = "{path}/{file}".format(path=save_path, file=filename)
         cover.save(file_path)
-
-    
 
 @post('/add_new_copy_by_ISBN')
 def add_new_copy(db):
@@ -426,6 +426,10 @@ def get_rented_books(db, reader_ID):
 def copy_is_in_library(serial_number, db):
     copies_in_library = db.execute("SELECT copyID FROM copies WHERE copyID = ? AND readerID IS NULL", (serial_number,)).fetchall()
     return len(copies_in_library)
+
+def copy_is_on_loan(serial_number, db):
+    copies_on_loan = db.execute("SELECT copyID FROM copies WHERE copyID = ? AND readerID IS NOT NULL", (serial_number,)).fetchall()
+    return len(copies_on_loan)
 
 def number_overdue_books(number_results, rented_book_list):
     import datetime
