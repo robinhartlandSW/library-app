@@ -257,8 +257,13 @@ def reserve_book(db):
     reserver_ID = dropdown_field_to_id(reader_name_dropdown)
     edition_ID = request.forms.get('edition_ID')
     date = datetime.datetime.now()
-    db.execute("INSERT INTO reservations(reserver_ID, editionID, datePlaced) VALUES (?, ?, ?)", (reserver_ID, edition_ID ,date))
-    return template('librarian_home.tpl', reservation_added = 1, editions = [])
+
+    existing_reservation = reservation_already_exists(db, reserver_ID, edition_ID)
+    if existing_reservation == False:
+        db.execute("INSERT INTO reservations(reserver_ID, editionID, datePlaced) VALUES (?, ?, ?)", (reserver_ID, edition_ID ,date))
+        return template('librarian_home.tpl', reservation_added = 1, editions = [])
+    else:
+        return template('librarian_home.tpl', reservation_added = -1, editions = [])
 
 @get('/show_reservation_form/<serial_number>')
 def show_reservation_form(serial_number, db):
@@ -427,7 +432,13 @@ def reserved_book_list(db, reader_ID):
     for i in range(number_results):
         reserved_book_list.append([' ', str(reserved_books[i]['title']), str(reserved_books[i]['author']), ' '])
     return reserved_book_list
-    
+
+def reservation_already_exists(db, reader_ID, edition_ID):
+    existing_reservations = db.execute("SELECT * FROM reservations WHERE reserver_ID = ? AND editionID = ?", (reader_ID, edition_ID)).fetchall()
+    if existing_reservations == []:
+        return False
+    else:
+        return True
 
 
 run(host='localhost', port=8080, debug=True)

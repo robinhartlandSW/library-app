@@ -13,4 +13,7 @@ function reservation_added(x) {
     if (y === 1) {
         popup("Reservation added!")
     }
+    if (y === -1) {
+        popup("User has already reserved a copy of this book!")
+    }
 }
