@@ -23,10 +23,9 @@ function show_serial_numbers(editionID) {
 
                         serial_number_list.appendChild(list_element);
                     }
-                
-                    // use a sweetAlert to display serial numbers nicely 
+
                     swal({
-                        title: "Available serial numbers:",
+                        title: "AVAILABLE SERIAL NUMBERS:",
                         content: serial_number_list,
                         className: "alert-box"
                     });

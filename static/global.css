@@ -116,7 +116,7 @@ h1, h2 {
     padding: 30px;
 }
 
-#checkout-box {
+.checkout-box {
     padding: 10px;
     float: none;
     width: 40%;
@@ -381,6 +381,10 @@ a {
     background-color: rgba(237,237,237);
     border: 1px solid #ccc;
     border-radius: 0;
+}
+
+.swal-title {
+    font-size: 21px;
 }
 
 .swal-button {
