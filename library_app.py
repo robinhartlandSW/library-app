@@ -140,7 +140,6 @@ def check_out_book(db):
     days_rented = int(days_rented)
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
-    readerID = request.forms.get('readerID')
 
     has_overdue_book = user_has_overdue_book(db, readerID)
     if has_overdue_book[0] == True:
@@ -151,15 +150,6 @@ def check_out_book(db):
  
     due_date = now + datetime.timedelta(days = days_rented)
 
-    # this validation is now done client side by the try_to_borrow_copy() function in popup.js
-    # has_overdue_book = user_has_overdue_book(db, readerID)
-    # if has_overdue_book[0] == True:
-    #     books_overdue = has_overdue_book[1]
-    #     bookstring = ''
-    #     for book in books_overdue:
-    #         bookstring += (str(book['copyID']) + ', ')
-        
-    #     return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
     if copy_is_in_library(serial_number, db):
         db.execute('UPDATE copies SET readerID=? WHERE copyID = ?', (readerID, serial_number))
         db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
