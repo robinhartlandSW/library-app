@@ -10,11 +10,10 @@ function empty_search() {
     let name = document.getElementById("reader_name_dropdown").value;
     name_second_last_digit = name[name.length-2]
     let ID = parseInt(name_second_last_digit)
+    
     if (isNaN(ID)) {
-        popup('Please choose a valid user.')
+        popup('PLEASE SELECT A USER')
         return false
     }
-    else {
-        return true
-    }
+    return true
 }

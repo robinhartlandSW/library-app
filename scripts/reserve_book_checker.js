@@ -6,14 +6,12 @@ function popup(message) {
     })
 }
 
-
-
 function reservation_added(x) {
     let y = parseInt(x)
     if (y === 1) {
-        popup("Reservation added!")
+        popup("RESERVATION ADDED")
     }
     if (y === -1) {
-        popup("User has already reserved a copy of this book!")
+        popup("FAILED: USER IS ALREADY RESERVING THIS BOOK")
     }
 }

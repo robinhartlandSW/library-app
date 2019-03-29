@@ -9,26 +9,22 @@ function popup(message) {
 function check_conditions() {
     let title = document.getElementById("title").value;
     let isbn = document.getElementById("ISBN").value;
-    
-    if (title.length == 0 && isbn.length == 0) {
+
+    if (title.length === 0 && isbn.length === 0) {
         popup("FAILED: TITLE & ISBN MUST NOT BE EMPTY")
         return false
     }
-    else if (title.length == 0) {
+    else if (title.length === 0) {
         popup("FAILED: TITLE MUST NOT BE EMPTY")
         return false
     }
-    else if (isbn.length == 0) {
+    else if (isbn.length === 0) {
         popup("FAILED: ISBN MUST NOT BE EMPTY")
         return false
     }
-    else if (!(isbn.length == 13)) {
+    else if ((isNaN(isbn)) || !(isbn.length == 13)) {
         popup("FAILED: ENTER A VALID 13 DIGIT ISBN")
         return false
-    }
-    else if ((isNaN(isbn))) {
-        popup("FAILED: ENTER A VALID 13 DIGIT ISBN")
-        return  false
     }
     return true
 }
@@ -39,20 +35,16 @@ function check_conditions_isbn() {
         popup("FAILED: ISBN MUST NOT BE EMPTY")
         return false
     }
-    else {
-        return true
-    }
+    return true
 }
 
 function check_conditions_title() {
-    let isbn = document.getElementById("title_1").value;
-    if (isbn.length === 0) {
+    let title = document.getElementById("title_1").value;
+    if (title.length === 0) {
         popup("FAILED: TITLE MUST NOT BE EMPTY")
         return false
     }
-    else {
-        return true
-    }
+    return true
 }
 
 function success_message(x) {
@@ -77,9 +69,7 @@ function check_conditions_name() {
         popup("FAILED: FIRST NAME MUST NOT BE EMPTY")
         return false
     }
-    else {
-        return true
-    }
+    return true
 }
 
 function success_message_user(x) {
