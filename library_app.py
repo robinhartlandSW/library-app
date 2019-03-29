@@ -155,9 +155,9 @@ def check_out_book(db):
         db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
         db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
         check_for_satisfied_reservations(serial_number, readerID, db)
-        return template("book_checked_out.tpl")
+        return get_reader_overview(db, readerID, 2)
     else:
-        return template('message_page.tpl', message="Error", submessage = "That book is not available to be borrowed")
+        return get_reader_overview(db, readerID, 3)
 
 
     
@@ -439,6 +439,25 @@ def reservation_already_exists(db, reader_ID, edition_ID):
         return False
     else:
         return True
+
+def get_reader_overview(db, user_id, fine_added_popup_number):
+    reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
+    num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
+    fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
+    fine_float = float(fine)
+    fine = -fine_float
+    
+    string_fine = str(fine)
+
+    rented_book_list = get_rented_books(db, user_id)
+    number_results = len(rented_book_list)
+    overdue_books = number_overdue_books(number_results, rented_book_list)
+
+    reserved_books = reserved_book_list(db, user_id)
+    number_reservations = len(reserved_books)
+
+    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=fine_added_popup_number, number_reservations=number_reservations, reservation_list=reserved_books)
+
 
 
 run(host='localhost', port=8080, debug=True)

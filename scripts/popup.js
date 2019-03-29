@@ -41,6 +41,12 @@ function success_message_fine(x) {
     else if (y === -1) {
         popup("Fine paid")
     }
+    else if (y === 2) {
+        popup("Success! Book rented.")
+    }
+    else if (y === 3) {
+        popup("Failed. Book not available to be rented.")
+    }
 }
 
 function verify_fine_add() {
