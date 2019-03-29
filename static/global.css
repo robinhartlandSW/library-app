@@ -293,6 +293,22 @@ a {
     border: 1px solid #ccc;
 }
 
+.column {
+    flex: 50%;
+    max-width: 50%;
+    padding: 0 4px;
+}
+
+.column .home-block {
+    margin: 10px 10px;
+    padding: 20px;
+    width: calc(100% - 15px);
+    height: 160px;
+    background-color:#ededed;
+    vertical-align: middle;
+}
+
+
 @media screen and (max-width: 1050px) {
     .column {
         max-width: 50%;
@@ -328,21 +344,6 @@ a {
     padding: 0 4px;
 }
 
-.column {
-    flex: 50%;
-    max-width: 50%;
-    padding: 0 4px;
-}
-
-.column .home-block {
-    margin: 10px 10px;
-    padding: 20px;
-    width: calc(100% - 15px);
-    height: 160px;
-    background-color:#ededed;
-    vertical-align: middle;
-}
-
 #reader-name-input input[type="text"]{
     margin-right: 0;
     width: 120px !important;
@@ -373,5 +374,19 @@ a {
 	font-size: 14px;
 	cursor: pointer;
     border: 1px solid  #424242;
-    margin-right: 18px;
+    margin-right: 16px;
+}
+
+.swal-modal {
+    background-color: rgba(237,237,237);
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+
+.swal-button {
+    border-radius: 0;
+    border: 1px solid  #424242;
+    background-color: whitesmoke;
+    color: black;
+    font-weight: normal;
 }

@@ -93,7 +93,7 @@
                     </div>
                 </div>
             % end
-            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button"> Show all Books </button></a></p>
+            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button">SHOW ENTIRE LIBRARY</button></a></p>
         </body>
     
     </html>
