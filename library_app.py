@@ -306,6 +306,8 @@ def fine_reader(db):
     fine = -fine_float
     
     string_fine = str(fine)
+    if string_fine == '-0.0':
+        string_fine = '0.0'
 
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
@@ -333,6 +335,9 @@ def pay_fine(db):
     fine = -fine_float
     
     string_fine = str(fine)
+    if string_fine == '-0.0':
+        string_fine = '0.0'
+
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
     overdue_books = number_overdue_books(number_results, rented_book_list)
@@ -477,6 +482,9 @@ def reader_overview_page(reader_ID, db):
     last_name = reader['lastName']
     reader_name = first_name + ' ' + last_name
     string_fine = str(fine)
+    if string_fine == '-0.0':
+        string_fine = '0.0'
+
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
     rented_book_list = get_rented_books(db, reader_ID)
     number_results = len(rented_book_list)
