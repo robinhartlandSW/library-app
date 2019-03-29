@@ -16,7 +16,7 @@ function check_conditions(num_books_borrowed, fine, overdue_books){
         popup('Failed - user has borrowed too many books')
         return false
     }
-    else if (fine_int > 0) {
+    else if (fine_int < 0) {
         popup('Failed - user must pay fine')
         return false
     }

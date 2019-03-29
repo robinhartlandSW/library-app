@@ -108,6 +108,8 @@ def reader_overview(db):
     reader_ID = dropdown_field_to_id(reader_name_dropdown)
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (reader_ID,)).fetchone()
     fine = reader['fine']
+    fine_float = float(fine)
+    fine = -fine_float
     first_name = reader['firstName']
     last_name = reader['lastName']
     reader_name = first_name + ' ' + last_name
@@ -256,6 +258,7 @@ def reserve_book(db):
     edition_ID = request.forms.get('edition_ID')
     date = datetime.datetime.now()
     db.execute("INSERT INTO reservations(reserver_ID, editionID, datePlaced) VALUES (?, ?, ?)", (reserver_ID, edition_ID ,date))
+    return template('librarian_home.tpl', reservation_added = 1, editions = [])
 
 @get('/show_reservation_form/<serial_number>')
 def show_reservation_form(serial_number, db):
@@ -275,6 +278,9 @@ def fine_reader(db):
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
+    fine_float = float(fine)
+    fine = -fine_float
+    
     string_fine = str(fine)
 
     rented_book_list = get_rented_books(db, user_id)
@@ -299,6 +305,9 @@ def pay_fine(db):
     reader = db.execute('SELECT * FROM readers WHERE ID = ?', (user_id,)).fetchone()
     num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID == ?", (user_id,)).fetchone()[0]
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
+    fine_float = float(fine)
+    fine = -fine_float
+    
     string_fine = str(fine)
     rented_book_list = get_rented_books(db, user_id)
     number_results = len(rented_book_list)
