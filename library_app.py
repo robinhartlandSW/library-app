@@ -190,8 +190,6 @@ def add_new_edition(db):
     location = request.forms.get('location')
     ISBN = request.forms.get('ISBN')
     cover = request.files.get('cover')
-<<<<<<< HEAD
-=======
     if cover is not None:
         save_path = "./img"
         name, ext = os.path.splitext(cover.filename)
@@ -201,7 +199,6 @@ def add_new_edition(db):
             cover.save(file_path)
         except:
             pass
->>>>>>> 50a7cbf0891c225c2de03e1216d85bf4c0924a3a
 
     check_existence = db.execute("SELECT * FROM editions WHERE ISBN = (?)", [ISBN]).fetchone()
     if check_existence == None:
@@ -216,8 +213,6 @@ def add_new_edition(db):
         filename = ISBN + ext
         file_path = "{path}/{file}".format(path=save_path, file=filename)
         cover.save(file_path)
-
-    
 
 @post('/add_new_copy_by_ISBN')
 def add_new_copy(db):
