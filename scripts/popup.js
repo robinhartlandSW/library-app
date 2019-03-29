@@ -6,7 +6,7 @@ function popup(message) {
     })
 }
 
-async function check_conditions(num_books_borrowed, fine, overdue_books){
+function try_to_borrow_copy(num_books_borrowed, fine, overdue_books) {
     var books_borrowed_str = num_books_borrowed;
     var books_borrowed_int = parseInt(books_borrowed_str, 10);
     var fine_str = fine;
@@ -18,25 +18,23 @@ async function check_conditions(num_books_borrowed, fine, overdue_books){
 
     let readerID = document.getElementById("readerID").value;
 
+    let days_rented_box = document.getElementById("days_rented");
+    let days_to_rent_for = days_rented_box.value
+
     if (books_borrowed_int > 7) {
         popup('FAILED: 8 BOOK LOAN LIMIT REACHED')
-        return false
     }
     else if (fine_int > 0) {
         popup('FAILED: USER HAS OUTSTANDING FINES')
-        return false
     }
     else if (overdue_int > 0) {
         popup('FAILED: USER HAS OVERDUE BOOKS')
-        return false
     }
-    else if (await copy_reserved(serial_number, readerID)) {
-        popup('FAILED: ALL COPIES ARE ALREADY RESERVED')
-        return false
+    else {
+        borrow_if_not_reserved(serial_number, readerID, days_to_rent_for)
     }
     return true
 }
-
 
 function no() {
     return false

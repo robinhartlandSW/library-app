@@ -102,46 +102,42 @@ def find_matching_names(db):
     # convert response to JSON
     return json.dumps(parsed_matches)
 
+
+@get('/reader_overview_by_ID/<id>')
+def reader_overview_by_ID(id, db):
+    return reader_overview_page(id, db)
+
 @post('/reader_overview')
 def reader_overview(db):
     reader_name_dropdown = request.forms.get('reader_name_input')
     reader_ID = dropdown_field_to_id(reader_name_dropdown)
-    reader = db.execute('SELECT * FROM readers WHERE ID = ?', (reader_ID,)).fetchone()
-    fine = reader['fine']
-    fine_float = float(fine)
-    fine = -fine_float
-    first_name = reader['firstName']
-    last_name = reader['lastName']
-    reader_name = first_name + ' ' + last_name
-    string_fine = str(fine)
-    num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
-    rented_book_list = get_rented_books(db, reader_ID)
-    number_results = len(rented_book_list)
-    reserved_books = reserved_book_list(db, reader_ID)
-    number_reservations = len(reserved_books)
-    overdue_books = number_overdue_books(number_results, rented_book_list)
-    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books, number_reservations=number_reservations, reservation_list=reserved_books)
+    return reader_overview_page(reader_ID, db)
     
-@post('/check_if_copy_reserved')
-def check_if_copy_reserved(db):
+@post('/is_copy_reserved_by_someone_else')
+def is_copy_reserved_by_someone_else(db):
     (serial_number, readerID) = request.json
     editionID = serial_number_to_edition_ID(serial_number, db)
+    readerID = int(readerID)
 
     num_reservations_for_that_edition = db.execute("SELECT COUNT(ID) FROM reservations WHERE editionID = ?", (editionID, )).fetchone()[0]
     available_copies_of_that_edition = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID IS NULL AND editionID = ?", (editionID, )).fetchone()[0]
+ 
+    all_remaining_copies_reserved = (num_reservations_for_that_edition >= available_copies_of_that_edition)
 
-    return JSON.stringify(num_reservations_for_that_edition >= available_copies_of_that_edition)
+    edition_reserved_by_this_reader = False
+    reservations_of_this_edition = db.execute("SELECT reserver_ID FROM reservations WHERE editionID = ?", (editionID,)).fetchall()  
+    for res in reservations_of_this_edition:
+        if res['reserver_ID'] == readerID:
+            edition_reserved_by_this_reader = True
+    
+    can_borrow = edition_reserved_by_this_reader or not all_remaining_copies_reserved
+    return json.dumps(not can_borrow)
 
 
 @post('/check_out_book')
 def check_out_book(db): 
-    title = request.forms.get('title')
-    author = request.forms.get('author')
-    serial_number = request.forms.get('serial_number')
-    days_rented = request.forms.get('days_rented')
-    current_fine = request.forms.get('current_fine')
+    (serial_number, readerID, days_rented) = request.json
     days_rented = int(days_rented)
-    current_fine = fine_string_to_decimal(current_fine)
     now = datetime.datetime.now()
     due_date = now + datetime.timedelta(days = days_rented)
     readerID = request.forms.get('readerID')
@@ -152,16 +148,27 @@ def check_out_book(db):
         bookstring = ''
         for book in books_overdue:
             bookstring += (str(book['copyID']) + ', ')
-        
-        return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
+ 
+    due_date = now + datetime.timedelta(days = days_rented)
 
+    # this validation is now done client side by the try_to_borrow_copy() function in popup.js
+    # has_overdue_book = user_has_overdue_book(db, readerID)
+    # if has_overdue_book[0] == True:
+    #     books_overdue = has_overdue_book[1]
+    #     bookstring = ''
+    #     for book in books_overdue:
+    #         bookstring += (str(book['copyID']) + ', ')
+        
+    #     return template('message_page.tpl', message = 'FAILED - USER HAS OVERDUE BOOKS', submessage = 'Overdue book IDs: ' + bookstring)
     if copy_is_in_library(serial_number, db):
-        db.execute("UPDATE copies SET readerID=? WHERE copyID=?", (readerID, serial_number))
+        db.execute('UPDATE copies SET readerID=? WHERE copyID = ?', (readerID, serial_number))
         db.execute('UPDATE copies SET due_date = ? WHERE copyID = ?', (due_date, serial_number))
         check_for_satisfied_reservations(serial_number, readerID, db)
-        return get_reader_overview(db, readerID, 2)
+        book_checked_out = True
     else:
-        return get_reader_overview(db, readerID, 3)
+        book_checked_out = False
+
+    return json.dumps(book_checked_out)
 
 
 @post('/return_book_to_database')
@@ -365,7 +372,7 @@ def is_book_overdue(db, book_id):
     now = datetime.datetime.now()
     due_date = db.execute('SELECT due_date FROM copies WHERE copyID = ?', (book_id,)).fetchone()
     if due_date is None:
-        pass
+        return (False, 0)
     due_date = due_date[0]
     due_date = datetime.datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S.%f')
     if now > due_date:
@@ -427,9 +434,10 @@ def number_overdue_books(number_results, rented_book_list):
 def fine_string_to_decimal(fine_string):
     return Decimal(fine_string.split('£')[-1])
 
-def check_for_satisfied_reservations(copy_ID, reader_ID, db):
-    edition_ID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (copy_ID, )).fetchone()['editionID']
-    db.execute("DELETE FROM reservations WHERE reserver_ID = ? AND editionID = ?", (reader_ID, edition_ID))
+def check_for_satisfied_reservations(serial_number, reader_ID, db):
+    edition_ID = serial_number_to_edition_ID(serial_number, db)
+    db.execute("DELETE FROM reservations WHERE editionID = ? AND reserver_ID = ?", (edition_ID, reader_ID))
+
 
 def reserved_book_list(db, reader_ID):
     reserved_books1 = db.execute('SELECT * FROM reservations WHERE reserver_ID = ?', (reader_ID,)).fetchall()
@@ -460,17 +468,21 @@ def get_reader_overview(db, user_id, fine_added_popup_number):
     fine_float = float(fine)
     fine = -fine_float
     
+def reader_overview_page(reader_ID, db):
+    reader = db.execute('SELECT * FROM readers WHERE ID = ?', (reader_ID,)).fetchone()
+    fine = reader['fine']
+    first_name = reader['firstName']
+    last_name = reader['lastName']
+    reader_name = first_name + ' ' + last_name
     string_fine = str(fine)
-
-    rented_book_list = get_rented_books(db, user_id)
+    num_books_borrowed = db.execute("SELECT COUNT(copyID) FROM copies WHERE readerID = ?", (reader_ID,)).fetchone()[0]
+    rented_book_list = get_rented_books(db, reader_ID)
     number_results = len(rented_book_list)
-    overdue_books = number_overdue_books(number_results, rented_book_list)
-
-    reserved_books = reserved_book_list(db, user_id)
+    reserved_books = reserved_book_list(db, reader_ID)
     number_reservations = len(reserved_books)
 
-    return template('reader_overview.tpl', ID=user_id, reader_name=reader['firstName'] + ' ' + reader['lastName'], num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message='FINE ADDED', book_list=rented_book_list, number_results=number_results, num_overdue_books = overdue_books, fine_added=fine_added_popup_number, number_reservations=number_reservations, reservation_list=reserved_books)
+    overdue_books = number_overdue_books(number_results, rented_book_list)
 
-
+    return template('reader_overview', ID=reader_ID, reader_name=reader_name, num_books_borrowed=num_books_borrowed, fine='£' + string_fine, page_head_message=' ', book_list = rented_book_list, number_results = number_results, num_overdue_books = overdue_books, number_reservations=number_reservations, reservation_list=reserved_books)
 
 run(host='localhost', port=8080, debug=True)
