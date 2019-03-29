@@ -9,8 +9,7 @@ function popup(message) {
 function check_conditions() {
     let title = document.getElementById("title").value;
     let isbn = document.getElementById("ISBN").value;
-    int_isbn = parseInt(isbn)
-
+    
     if (title.length == 0 && isbn.length == 0) {
         popup("FAILED: TITLE & ISBN MUST NOT BE EMPTY")
         return false
@@ -27,7 +26,7 @@ function check_conditions() {
         popup("FAILED: ENTER A VALID 13 DIGIT ISBN")
         return false
     }
-    else if ((isNaN(int_isbn))) {
+    else if ((isNaN(isbn))) {
         popup("FAILED: ENTER A VALID 13 DIGIT ISBN")
         return  false
     }
