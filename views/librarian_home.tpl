@@ -8,10 +8,21 @@
         <script src="/scripts/show_serial_numbers.js"></script>
         <script src="/scripts/confirm_return.js"></script>
         <script src="scripts/empty_search.js"></script>
+        <script src="scripts/reserve_book_checker.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
 
     <body>
+
+    % try:
+        % reservation_added
+    %except NameError:
+        % reservation_added=0
+    % end
+    <script>
+    reservation_added({{reservation_added}})
+    </script>
+
         <div id="other-view-link">
             <a href="/switch_to_borrower_view">SWITCH TO BORROWER VIEW</a>
         </div>

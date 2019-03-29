@@ -3,6 +3,9 @@
         <title> Place reservation? </title>
         % include('stylesheet_link_subtemplate.tpl')
         <script src="/scripts/suggest_readers.js"></script>
+        <script src="/scripts/reserve_book_checker.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="/scripts/empty_search.js"></script>
     </head>
     <body>
         <h1> Place reservation? </h1>

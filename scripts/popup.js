@@ -16,7 +16,7 @@ function check_conditions(num_books_borrowed, fine, overdue_books){
         popup('Failed - user has borrowed too many books')
         return false
     }
-    else if (fine_int > 0) {
+    else if (fine_int < 0) {
         popup('Failed - user must pay fine')
         return false
     }
@@ -40,6 +40,12 @@ function success_message_fine(x) {
     }
     else if (y === -1) {
         popup("Fine paid")
+    }
+    else if (y === 2) {
+        popup("Success! Book rented.")
+    }
+    else if (y === 3) {
+        popup("Failed. Book not available to be rented.")
     }
 }
 
