@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', function() {
     check_out_form.addEventListener("submit", function(event) {
         event.preventDefault();
     })
+
 })
 
 function borrow_if_not_reserved(serial_number, readerID, days_to_rent_for) {
