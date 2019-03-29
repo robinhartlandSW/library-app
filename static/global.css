@@ -134,18 +134,9 @@ a {
     color: rgb(88, 57, 21);
 }
 
-.librarian-form {
-    text-align: left;
-    padding: 30px;
-}
-
 form {
     text-align: left;
     margin-block-end: 0;
-}
-
-#reader-info {
-    margin: 30px;
 }
 
 .see-available-copies-button {
@@ -210,7 +201,7 @@ form {
     text-align: right;
 }
 
-.add-form input[type="text"], .add-user-form input[type="text"] {
+input[type="text"] {
     padding: 10px;
     margin: 10px 10px;
     float: none;
@@ -321,10 +312,61 @@ a {
     }
 }
 
-.action-heading {
+.action-heading, .details {
     text-align: center;
     font-size: 16px;
     font-weight: bold;
     vertical-align: middle;
+}
+
+.action-heading {
     color: black;
 }
+
+.details {
+    color: grey;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 4px;
+}
+
+.column {
+    flex: 50%;
+    max-width: 50%;
+    padding: 0 4px;
+}
+
+.column .home-block {
+    margin: 10px 10px;
+    padding: 20px;
+    width: calc(100% - 15px);
+    height: 160px;
+    background-color:#ededed;
+    vertical-align: middle;
+}
+
+.user-lookup-element {
+    float: left;
+    margin: 10px 10px;
+}
+
+#lookup-search {
+    margin-right: 0;
+    width: 180px !important;
+}
+#all_button{
+    float: right;
+    background-color: whitesmoke;
+	border: none;
+	color: #424242;
+	padding: 12px 44px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	cursor: pointer;
+    border: 1px solid  #424242;
+}
+

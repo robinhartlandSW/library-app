@@ -54,6 +54,13 @@ def librarian_search(db):
     search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
     return template('librarian_home', editions=search_results)
 
+@get('/librarian_show_all')
+def librarian_search(db):
+    phrase = ''
+    search_results = get_search_results(db, phrase)
+    search_results = list({e['ID']:e for e in get_num_copies(db, search_results)}.values())
+    return template('librarian_home', editions=search_results)
+
 @get('/add_new_reader')
 def add_new_reader():
     return template('new_reader')

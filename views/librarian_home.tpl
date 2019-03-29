@@ -7,6 +7,8 @@
         <script src="/scripts/suggest_readers.js"></script>
         <script src="/scripts/show_serial_numbers.js"></script>
         <script src="/scripts/confirm_return.js"></script>
+        <script src="scripts/empty_search.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
 
     <body>
@@ -41,7 +43,7 @@
                     <div id="input-box">
                         <div class="input-container">
                             <form action="/return_book_to_database" method="POST" onsubmit="confirm_return()">
-                                <input type="number" placeholder="Serial No." name="serial_number" id="serial_number">
+                                <input type="number" placeholder="Serial No." name="serial_number" id="serial_number" required/>
                             </form>
                         </div>
                     </div>
@@ -50,13 +52,15 @@
 
             <div class="column">
                 <div class="home-block">
-                    <div class="action-heading">USER ACCOUNTS</div>                       
-                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='Enter account', edition_ID=0)
+                    <div class="action-heading">USER ACCOUNTS</div><br>
+                        % include('reader_info_form.tpl', action = '/reader_overview', button_text='VIEW', edition_ID=0)
                     </div>
                 </div>
             </div><br>
 
-        <h2>SEARCH AND RESERVE BOOKS</h2>
+            
+
+        <h2 id="search_reserve">SEARCH AND RESERVE BOOKS </h2>  
 
             <div id="search-box">
                 <div class="search-element-container">
@@ -64,6 +68,7 @@
                         <input type="text" placeholder="Search..." name="phrase">
                     </form>
                 </div> 
+                
             </div>
     
             % for edition in editions:
@@ -88,7 +93,7 @@
                     </div>
                 </div>
             % end
-    
+            <p id="all_button_p"><a href = "/librarian_show_all"><button id = "all_button"> Show all Books </button></a></p>
         </body>
     
     </html>

@@ -9,9 +9,18 @@ function popup(message) {
 function check_conditions() {
     let title = document.getElementById("title").value;
     let isbn = document.getElementById("ISBN").value;
+    int_isbn = parseInt(isbn)
     if (title.length === 0 || isbn.length === 0) {
         popup("The form is incomplete! Please add a title and ISBN.")
         return false
+    }
+    else if (!(isbn.length == 13)) {
+        popup("Please enter a valid 13 digit ISBN")
+        return false
+    }
+    else if ((isNaN(int_isbn))) {
+        popup("Please enter a valid 13 digit ISBN")
+        return  false
     }
     else {
         return true
