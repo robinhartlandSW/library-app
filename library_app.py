@@ -451,11 +451,9 @@ def reserved_book_list(db, reader_ID):
         reserved_book_list.append([' ', str(reserved_books[i]['title']), str(reserved_books[i]['author']), ' '])
     return reserved_book_list
 
-<<<<<<< HEAD
 def serial_number_to_edition_ID(serial_number, db):
     editionID = db.execute("SELECT editionID FROM copies WHERE copyID = ?", (serial_number, )).fetchone()['editionID']
     return editionID
-=======
 def reservation_already_exists(db, reader_ID, edition_ID):
     existing_reservations = db.execute("SELECT * FROM reservations WHERE reserver_ID = ? AND editionID = ?", (reader_ID, edition_ID)).fetchall()
     if existing_reservations == []:
@@ -469,7 +467,6 @@ def get_reader_overview(db, user_id, fine_added_popup_number):
     fine = db.execute('SELECT fine FROM readers WHERE ID = ?', (user_id,)).fetchone()[0]
     fine_float = float(fine)
     fine = -fine_float
->>>>>>> f134a6884d7026b66c49f58f3b27ccba6146102b
     
     string_fine = str(fine)
 

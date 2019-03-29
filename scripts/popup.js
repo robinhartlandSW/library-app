@@ -22,15 +22,9 @@ async function check_conditions(num_books_borrowed, fine, overdue_books){
         popup('Failed - user has borrowed too many books');
         return false;
     }
-<<<<<<< HEAD
     else if (fine_int > 0) {
         popup('Failed - user must pay fine');
         return false;
-=======
-    else if (fine_int < 0) {
-        popup('Failed - user must pay fine')
-        return false
->>>>>>> f134a6884d7026b66c49f58f3b27ccba6146102b
     }
     else if (overdue_int > 0) {
         popup('Failed - user has overdue books');
